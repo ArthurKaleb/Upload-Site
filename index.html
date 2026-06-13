@@ -283,7 +283,7 @@ button, .btn-link {
 
 /* ==========================================================================
    MODAIS (TEXTO E PRÉVIA DE IMAGEM)
-   ========================================================================== */
+   ========================================================================= */
 .modal-bg {
   position: fixed;
   inset: 0;
@@ -507,17 +507,17 @@ window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
   if(!text.trim()) return;
 
-  // CORREÇÃO: Enviando uma string válida para "nome" para satisfazer a regra NOT-NULL do banco
   const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
 
+  // CORREÇÃO DEFINITIVA: Passando "text-note" no lugar de null para satisfazer a restrição NOT NULL das colunas url e caminho
   const { error } = await supabase.from(TABLE).insert({
     tipo_item: "text",
     content: text,
-    nome: tituloNota, // Não é mais enviado como null
+    nome: tituloNota,
     tipo: "text/plain",
     tamanho: text.length,
-    url: null,
-    caminho: null,
+    url: "text-note",       // Preenchido para não quebrar a restrição do banco
+    caminho: "text-note",   // Preenchido para não quebrar a restrição do banco
     criado_em: new Date()
   });
 
@@ -625,7 +625,8 @@ async function load(){
 
 window.del=async(id,path)=>{
   try {
-    if(path && path.trim() !== ""){
+    // Só tenta apagar do storage se o caminho for de um arquivo real e válido
+    if(path && path.trim() !== "" && path !== "text-note"){
       await supabase.storage.from(BUCKET).remove([path]);
     }
     const { error } = await supabase.from(TABLE).delete().eq("uuid", id);
