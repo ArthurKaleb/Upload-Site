@@ -317,6 +317,102 @@ h1 {
 .btn-outline:hover { background: #27272a; }
 
 /* ==========================================================================
+   INTERFACE DO CHAT DE IA (GEMINI)
+   ========================================================================== */
+.chat-wrapper {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 14px;
+  height: calc(100vh - 200px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.chat-bubble.user {
+  background: #27272a;
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-bubble.assistant {
+  background: #09090b;
+  color: #e4e4e7;
+  border: 1px solid #27272a;
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+  white-space: pre-wrap;
+}
+
+.chat-bubble.system-error {
+  background: rgba(244, 63, 94, 0.1);
+  border: 1px solid rgba(244, 63, 94, 0.2);
+  color: #f43f5e;
+  align-self: center;
+  font-size: 13px;
+}
+
+.chat-input-area {
+  padding: 16px;
+  background: #1c1c1f;
+  border-top: 1px solid #27272a;
+  display: flex;
+  gap: 12px;
+}
+
+.chat-input-area input {
+  flex-grow: 1;
+  background: #09090b;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 14px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+.chat-input-area input:focus { border-color: #71717a; }
+
+/* Configuração da Chave */
+.api-key-container {
+  padding: 10px 16px;
+  background: #111113;
+  border-bottom: 1px solid #27272a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.api-key-container input {
+  background: #09090b;
+  border: 1px solid #27272a;
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  width: 250px;
+  outline: none;
+}
+
+/* ==========================================================================
    ESTILOS DO MINI DRIVE
    ========================================================================== */
 .iconBtn {
@@ -679,14 +775,25 @@ h1 {
   <div id="page-ia" class="page">
     <header>
       <div>
-        <h1>Inteligência Artificial</h1>
-        <div class="subtitle">Em desenvolvimento...</div>
+        <h1>Assistente IA</h1>
+        <div class="subtitle">Integrado diretamente com o Google Gemini</div>
       </div>
     </header>
-    <div style="text-align: center; margin-top: 100px; color: #71717a;">
-      <img src="ia.png" style="width: 64px; opacity: 0.5; margin-bottom: 20px;">
-      <h2>Sua IA chegará em breve!</h2>
-      <p>Este espaço está reservado para as futuras integrações de Inteligência Artificial.</p>
+    
+    <div class="chat-wrapper">
+      <div class="api-key-container">
+        <span style="font-size: 12px; color: #a1a1aa;">Chave de API do Google AI Studio:</span>
+        <input type="password" id="gemini-key-input" placeholder="Sua chave está configurada no código" onchange="saveApiKey(this.value)">
+      </div>
+
+      <div class="chat-messages" id="chat-messages-box">
+        <div class="chat-bubble assistant">Olá Kaleb! Sua API Key já foi aplicada com sucesso no código. Pode me perguntar qualquer coisa! Como posso te ajudar hoje?</div>
+      </div>
+
+      <div class="chat-input-area">
+        <input type="text" id="chat-user-input" placeholder="Digite sua mensagem para o Gemini... (Pressione Enter)">
+        <button class="btn-pomo btn-primary" style="font-size:13px; padding:0 20px;" onclick="sendMessageToIA()">Enviar</button>
+      </div>
     </div>
   </div>
 
@@ -785,7 +892,6 @@ h1 {
           clearInterval(pomoInterval);
           alert('Tempo de foco concluído! Ótimo trabalho.');
           
-          // Adicionar sessão no LocalStorage
           let count = parseInt(localStorage.getItem('pomo_sessions') || '0');
           count++;
           localStorage.setItem('pomo_sessions', count);
@@ -850,12 +956,92 @@ h1 {
     });
   }
 
-  // Monitorar tecla Enter no input do To-Do
   document.getElementById('todo-input').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') addTodo();
   });
 
-  // Inicializações Locais Rápidas
+  // --- LÓGICA DO CHAT (CONEXÃO GOOGLE GEMINI COM CHAVE EMBUTIDA) ---
+  const CHAVE_PADRAO = "AQ.Ab8RN6KOhwbn0k44gReOc736oz1L0WCO64gc39gjtvXj0oR0cw";
+
+  function saveApiKey(key) {
+    localStorage.setItem('gemini_api_key', key.trim());
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Se não houver chave salva no navegador, define a chave padrão que você enviou
+    let savedKey = localStorage.getItem('gemini_api_key');
+    if(!savedKey) {
+      savedKey = CHAVE_PADRAO;
+      localStorage.setItem('gemini_api_key', CHAVE_PADRAO);
+    }
+    document.getElementById('gemini-key-input').value = savedKey;
+  });
+
+  async function sendMessageToIA() {
+    const inputElement = document.getElementById('chat-user-input');
+    const messagesBox = document.getElementById('chat-messages-box');
+    const apiKey = localStorage.getItem('gemini_api_key') || CHAVE_PADRAO;
+    const userText = inputElement.value.trim();
+
+    if (!userText) return;
+
+    // Adiciona pergunta do usuário na interface
+    const userBubble = document.createElement('div');
+    userBubble.className = 'chat-bubble user';
+    userBubble.textContent = userText;
+    messagesBox.appendChild(userBubble);
+    
+    inputElement.value = '';
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+
+    // Coloca balão de carregamento provisório
+    const loadingBubble = document.createElement('div');
+    loadingBubble.className = 'chat-bubble assistant';
+    loadingBubble.innerHTML = '<em>Gemini está pensando...</em>';
+    messagesBox.appendChild(loadingBubble);
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: userText }]
+          }]
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(data.error.message);
+      }
+
+      if (data.candidates && data.candidates[0].content.parts[0].text) {
+        const replyText = data.candidates[0].content.parts[0].text;
+        loadingBubble.textContent = replyText;
+      } else {
+        throw new Error("Resposta inválida recebida do Google Gemini.");
+      }
+
+    } catch (error) {
+      loadingBubble.className = 'chat-bubble system-error';
+      loadingBubble.textContent = `Erro na API do Gemini: ${error.message}`;
+    }
+
+    messagesBox.scrollTop = messagesBox.scrollHeight;
+  }
+
+  document.getElementById('chat-user-input').addEventListener('keypress', (e) => {
+    if(e.key === 'Enter') sendMessageToIA();
+  });
+
+  // Inicializações Locais
   updateHeaderGreeting();
   renderTodos();
   document.getElementById('pomo-sessions-count').textContent = localStorage.getItem('pomo_sessions') || '0';
@@ -1034,7 +1220,6 @@ window.saveText=async()=>{
   await sendTextToSupabase(text);
 };
 
-// --- FUNÇÃO AUXILIAR PARA ENVIAR TEXTO (Compartilhada com o rascunho rápido) ---
 async function sendTextToSupabase(text) {
   const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
   const { error } = await supabase.from(TABLE).insert({
@@ -1057,7 +1242,6 @@ async function sendTextToSupabase(text) {
   }
 }
 
-// Vincula o botão de Rascunho Rápido da Home à função de salvar do Drive
 document.getElementById('btn-save-quick-note').onclick = async () => {
   const text = document.getElementById('quick-note-textarea').value;
   if(!text.trim()) {
@@ -1130,28 +1314,20 @@ fileInput.onchange=async(e)=>{
   load();
 };
 
-// --- RENDERIZAR ARQUIVOS RECENTES NA HOME ---
 function renderRecentFiles(items) {
   const container = document.getElementById('recent-files-container');
   if(!container) return;
-  
   if(items.length === 0) {
     container.innerHTML = '<p style="color:#71717a; font-size:13px;">Nenhum arquivo encontrado.</p>';
     return;
   }
-
-  // Pega apenas os 4 itens mais recentes
   const recents = items.slice(0, 4);
   container.innerHTML = '';
-
   recents.forEach(item => {
     const itemRow = document.createElement('div');
     itemRow.className = 'recent-item';
-    
-    // Formatar exibição de data curta
     const dateObj = new Date(item.criado_em);
     const shortDate = dateObj.toLocaleDateString('pt-BR', {day: 'numeric', month: 'short'});
-
     itemRow.innerHTML = `
       <span class="recent-name" title="${item.nome}">${item.tipo_item === 'text' ? '📝 ' : '📁 '}${item.nome}</span>
       <span class="recent-date">${shortDate}</span>
@@ -1172,8 +1348,6 @@ async function load(){
     if(!data) return;
     
     cacheItens = data;
-    
-    // Atualizar o Widget de modificados recentemente na Home
     renderRecentFiles(data);
 
     data.forEach((item,i)=>{
