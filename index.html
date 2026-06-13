@@ -654,7 +654,7 @@
         background: #18181b;
         border: 1px solid #27272a;
         border-radius: 14px;
-        overflow: hidden;
+        overflow: visible; /* RESOLVE BUG NO MOBILE: Permite que menus vazem do card */
         display: flex;
         flex-direction: column;
         opacity: 0;
@@ -724,12 +724,13 @@
         .card-menu .delete-opt:hover { background: rgba(244, 63, 94, 0.15); color: #f43f5e; }
 
         .preview {
+        border-radius: 13px 13px 0 0; /* Arredonda o topo dentro do card */
         height: 145px;
         background: #09090b;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
+        overflow: hidden; /* Mantém as imagens clipadas dentro do preview */
         border-bottom: 1px solid #27272a;
         position: relative;
         }
@@ -888,131 +889,139 @@
         .close-viewer:hover { color: #fff; transform: scale(1.1); }
 
         /* ==========================================================================
-        RESPONSIVIDADE (MOBILE / BOTTOM NAVBAR)
+        RESPONSIVIDADE (MOBILE / MENU HAMBÚRGUER LATERAL)
         ========================================================================== */
         @media (max-width: 768px) {
             body {
-                display: block; /* Remove o flex para lidar melhor com a navbar fixa */
+                display: block;
             }
 
-            .sidebar {
-                position: fixed; /* Fixa a barra no fundo da tela */
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 70px;
-                padding-bottom: env(safe-area-inset-bottom); /* Área segura do iPhone */
-                background: rgba(24, 24, 27, 0.95); /* Leve transparência para estilo */
-                backdrop-filter: blur(10px); /* Efeito de desfoque */
-                -webkit-backdrop-filter: blur(10px);
-                border-right: none;
-                border-top: 1px solid #27272a;
-                flex-direction: row;
-                justify-content: center;
-                z-index: 9999; /* Garante que fique acima de tudo */
+            /* Estilo do novo botão sanduíche */
+            .mobile-menu-btn {
+                display: flex;
                 align-items: center;
+                justify-content: center;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: rgba(24, 24, 27, 0.85);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid #27272a;
+                border-radius: 8px;
+                padding: 8px;
+                z-index: 10000;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            
+            .mobile-menu-btn img {
+                width: 24px;
+                height: 24px;
+                opacity: 0.8;
+            }
+
+            /* Afasta o título do cabeçalho para não bater no botão */
+            header { 
+                padding-left: 50px; 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 16px; 
+            }
+            header > div:last-child { align-self: flex-end; }
+
+            /* Nova Sidebar Lateral (escondida por padrão) */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%; /* Esconde a barra fora da tela */
+                bottom: auto;
+                width: 260px;
+                height: 100dvh;
+                background: rgba(24, 24, 27, 0.98);
+                backdrop-filter: blur(15px);
+                -webkit-backdrop-filter: blur(15px);
+                border-right: 1px solid #27272a;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding-top: 80px; /* Dá espaço para o botão de menu ali em cima */
+                transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                z-index: 9999;
+            }
+
+            /* Classe que o JS vai adicionar para mostrar a barra */
+            .sidebar.open {
+                left: 0;
             }
 
             .sidebar h2 {
-                display: none; /* Esconde o título da Workspace */
+                display: block; /* Volta a exibir o título no mobile */
+                margin-bottom: 24px;
             }
 
             .main-content {
                 height: 100dvh;
                 overflow-y: auto;
-                /* Dá um espaço no fundo para o conteúdo não ficar escondido atrás da navbar */
-                padding-bottom: calc(90px + env(safe-area-inset-bottom)); 
+                padding-bottom: 30px; 
                 box-sizing: border-box;
             }
 
             .nav-menu {
-                flex-direction: row;
+                flex-direction: column;
                 width: 100%;
-                height: 170%;
-                padding-top: 1vh;
-                gap: 0;
-                justify-content: space-around;
-                background-color: rgba(0, 0, 0, 0);
+                height: auto;
+                padding-top: 0;
+                gap: 8px;
             }
 
             .nav-item {
-                flex-direction: column;
-                gap: 4px;
-                padding: 1vh;
-                font-size: 11px;
-                justify-content: center;
-                border-radius: 0;
-                background-color: rgba(0, 0, 0, 0);
-                height: 5vh;
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 12px;
+                font-size: 15px;
+                border-radius: 8px;
+                height: auto;
             }
 
-            .nav-item:hover {
-                transform: none; /* Remove o deslocamento X no mobile */
-            }
-
-            /* Modifica a linha ativa para ficar na parte superior do botão */
             .nav-item::after {
-                top: 0;
-                left: 10%;
-                width: 80%;
-                height: 3px;
-                transform: scaleX(0.3);
-                border-radius: 0 0 4px 4px;
+                top: 25%;
+                left: 0;
+                width: 3px;
+                height: 50%;
+                transform: scaleY(0.3);
+                border-radius: 0 4px 4px 0;
             }
 
             .nav-item.active::after {
-                transform: scaleX(1);
+                transform: scaleY(1);
             }
 
             /* Ajustes finos de interface para Mobile */
-            .page {
-                padding: 20px;
-            }
-
+            .page { padding: 20px; }
             h1 { font-size: 24px; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .pomodoro-container { padding: 20px; margin: 20px auto; }
+            .timer-display { font-size: 56px; }
+            .api-key-container { flex-direction: column; align-items: stretch; }
+            .api-key-container input { width: 100%; }
+            .chat-wrapper { height: calc(100vh - 220px); }
             
-            header { flex-direction: column; align-items: flex-start; gap: 16px; }
-            header > div:last-child { align-self: flex-end; } /* Posiciona botão de mais do Drive */
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pomodoro-container {
-                padding: 20px;
-                margin: 20px auto;
-            }
-
-            .timer-display {
-                font-size: 56px;
-            }
-
-            .api-key-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .api-key-container input {
-                width: 100%;
-            }
-
-            .chat-wrapper {
-                height: calc(100vh - 220px);
-            }
-
             /* Reajuste da grid do Mini Drive */
-            .grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 12px;
-            }
-            .preview {
-                height: 100px;
-            }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        }
+
+        /* Esconde o botão sanduíche no desktop */
+        @media (min-width: 769px) {
+            .mobile-menu-btn { display: none; }
         }
         </style>
     </head>
 
     <body>
+
+        <button class="mobile-menu-btn" onclick="toggleMenu()">
+            <img src="op.png" alt="Menu">
+        </button>
 
         <aside class="sidebar">
         <h2>Workspace</h2>
@@ -1196,12 +1205,22 @@
             document.body.style.opacity = '1';
         });
 
+        // Função para abrir e fechar o menu mobile
+        function toggleMenu() {
+            document.querySelector('.sidebar').classList.toggle('open');
+        }
+
         // --- NAVEGAÇÃO SPA ---
         function switchPage(pageId, btnElement) {
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.getElementById('page-' + pageId).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
             btnElement.classList.add('active');
+            
+            // Se estiver no celular, fecha o menu automaticamente ao escolher uma página
+            if (window.innerWidth <= 768) {
+                document.querySelector('.sidebar').classList.remove('open');
+            }
         }
 
         // --- SAUDAÇÃO INTELIGENTE & RELÓGIO ---
