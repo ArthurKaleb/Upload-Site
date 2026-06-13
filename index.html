@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Arquivos na Nuvem</title>
 
@@ -10,12 +10,12 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
     }
 
     body {
       background: #050505;
-      color: #fff;
+      color: white;
     }
 
     .app {
@@ -28,27 +28,26 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
     }
 
     h1 {
-      font-size: 26px;
+      font-size: 24px;
     }
 
     .btn {
       width: 50px;
       height: 50px;
       border-radius: 50%;
-      border: 1px solid #333;
       background: #111;
-      color: #fff;
+      color: white;
       font-size: 28px;
+      border: 1px solid #333;
       cursor: pointer;
     }
 
     .btn:hover {
-      background: #fff;
-      color: #000;
+      background: white;
+      color: black;
     }
 
     input {
@@ -56,28 +55,26 @@
     }
 
     .grid {
+      margin-top: 20px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 15px;
-      margin-top: 20px;
     }
 
     .card {
       background: #111;
-      border: 1px solid #222;
       padding: 12px;
       border-radius: 12px;
     }
 
     .preview {
       height: 140px;
-      background: #000;
+      background: black;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
       border-radius: 10px;
-      margin-bottom: 10px;
+      overflow: hidden;
     }
 
     img, video {
@@ -88,7 +85,7 @@
 
     .name {
       font-size: 13px;
-      margin-bottom: 6px;
+      margin: 8px 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -99,20 +96,21 @@
       gap: 5px;
     }
 
-    .actions a, .actions button {
+    .actions a,
+    .actions button {
       flex: 1;
       padding: 7px;
-      border: none;
-      font-size: 12px;
-      cursor: pointer;
       border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
       text-align: center;
-      text-decoration: none;
     }
 
-    .open {
-      background: #fff;
-      color: #000;
+    .download {
+      background: white;
+      color: black;
+      text-decoration: none;
     }
 
     .delete {
@@ -127,7 +125,7 @@
 
     <header>
       <h1>Arquivos na Nuvem</h1>
-      <button class="btn" id="upload">+</button>
+      <button class="btn" id="btn">+</button>
       <input type="file" id="file" multiple />
     </header>
 
@@ -138,18 +136,17 @@
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // ✅ CORRIGIDO (SEM /rest/v1)
     const SUPABASE_URL = "https://uosubywnpexfdykxrsda.supabase.co";
-
-    // ✅ SUA CHAVE PUBLICA
     const SUPABASE_KEY = "sb_publishable_c7Gcs7TYe8elQ-lZ50cjUA_EERGehuQ";
 
     const BUCKET = "arquivos";
     const TABLE = "arquivos";
 
+    const LIMIT = 10;
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const btn = document.getElementById("upload");
+    const btn = document.getElementById("btn");
     const fileInput = document.getElementById("file");
     const grid = document.getElementById("grid");
 
@@ -162,59 +159,72 @@
 
         const path = `${Date.now()}_${file.name}`;
 
-        // UPLOAD STORAGE
-        const { error: uploadError } = await supabase.storage
+        // 1. upload storage
+        const { error: upErr } = await supabase.storage
           .from(BUCKET)
           .upload(path, file);
 
-        if (uploadError) {
-          console.log("Erro upload:", uploadError.message);
-          continue;
-        }
+        if (upErr) continue;
 
-        // URL PUBLICA
+        // 2. url
         const { data } = supabase.storage
           .from(BUCKET)
           .getPublicUrl(path);
 
-        // BANCO
-        const { error: dbError } = await supabase
-          .from(TABLE)
-          .insert({
-            nome: file.name,
-            tipo: file.type,
-            url: data.publicUrl,
-            caminho: path,
-            tamanho: file.size,
-            criado_em: new Date()
-          });
+        // 3. insert db
+        await supabase.from(TABLE).insert({
+          nome: file.name,
+          tipo: file.type,
+          url: data.publicUrl,
+          caminho: path,
+          tamanho: file.size,
+          criado_em: new Date()
+        });
 
-        if (dbError) {
-          console.log("Erro DB:", dbError.message);
-        }
+        // 4. LIMITE DE 10 ARQUIVOS
+        await enforceLimit();
       }
 
       loadFiles();
     };
 
+    // 🔥 FUNÇÃO NOVA: limita 10 arquivos
+    async function enforceLimit() {
+
+      const { data } = await supabase
+        .from(TABLE)
+        .select("*")
+        .order("criado_em", { ascending: true }); // mais antigos primeiro
+
+      if (!data || data.length <= LIMIT) return;
+
+      const excess = data.length - LIMIT;
+
+      const toDelete = data.slice(0, excess);
+
+      for (let file of toDelete) {
+
+        await supabase.storage
+          .from(BUCKET)
+          .remove([file.caminho]);
+
+        await supabase
+          .from(TABLE)
+          .delete()
+          .eq("id", file.id);
+      }
+    }
+
     async function loadFiles() {
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from(TABLE)
         .select("*")
         .order("criado_em", { ascending: false });
 
-      if (error) {
-        console.log("Erro SELECT:", error.message);
-        return;
-      }
-
       grid.innerHTML = "";
 
-      if (!data || data.length === 0) {
-        grid.innerHTML = "<p>Nenhum arquivo</p>";
-        return;
-      }
+      if (!data || data.length === 0) return;
 
       data.forEach(file => {
 
@@ -233,8 +243,13 @@
           <div class="name">${file.nome}</div>
 
           <div class="actions">
-            <a class="open" href="${file.url}" target="_blank">Abrir</a>
-            <button class="delete" onclick="del('${file.id}','${file.caminho}')">Excluir</button>
+            <a class="download" href="${file.url}" download="${file.nome}">
+              Baixar
+            </a>
+
+            <button class="delete" onclick="del('${file.id}','${file.caminho}')">
+              Excluir
+            </button>
           </div>
         `;
 
@@ -245,7 +260,6 @@
     window.del = async (id, path) => {
 
       await supabase.storage.from(BUCKET).remove([path]);
-
       await supabase.from(TABLE).delete().eq("id", id);
 
       loadFiles();
