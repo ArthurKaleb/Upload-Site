@@ -102,7 +102,7 @@ h1 {
   gap: 20px;
 }
 
-/* CARDS COM POSITION RELATIVE PARA OS 3 PONTINHOS */
+/* CARDS */
 .card {
   position: relative;
   background: #18181b;
@@ -169,7 +169,7 @@ h1 {
   padding: 4px;
   z-index: 20;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  min-width: 130px;
+  min-width: 145px;
 }
 
 .card-menu button {
@@ -193,7 +193,6 @@ h1 {
   color: #f43f5e;
 }
 .card-menu .delete-opt:hover {
-  background: #p43f5e;
   background: rgba(244, 63, 94, 0.15);
   color: #f43f5e;
 }
@@ -292,7 +291,7 @@ h1 {
 }
 
 /* ==========================================================================
-   MODAIS (TEXTO E PRÉVIA DE IMAGEM)
+   MODAIS
    ========================================================================== */
 .modal-bg {
   position: fixed;
@@ -321,9 +320,8 @@ h1 {
   font-weight: 600;
 }
 
-.modal textarea {
+.modal textarea, .modal input[type="text"] {
   width: 100%;
-  height: 180px;
   background: #09090b;
   color: #fff;
   border: 1px solid #27272a;
@@ -331,32 +329,64 @@ h1 {
   padding: 14px;
   font-size: 14px;
   line-height: 1.5;
-  resize: none;
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
   transition: border-color 0.2s;
 }
 
-.modal textarea:focus {
+.modal textarea {
+  height: 180px;
+  resize: none;
+}
+
+.modal textarea:focus, .modal input[type="text"]:focus {
   border-color: #a1a1aa;
+}
+
+/* ESTILOS DA GRADE DE PROPRIEDADES */
+.prop-group {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #27272a;
+}
+
+.prop-label {
+  color: #71717a;
+  font-weight: 500;
+}
+
+.prop-value {
+  color: #e4e4e7;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-all;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 24px;
 }
 
-.modal-actions button {
+.modal-actions button, .btn-secondary {
   padding: 10px 16px;
   font-size: 13px;
   border: none;
   font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .btn-cancel {
@@ -370,6 +400,17 @@ h1 {
   color: #09090b;
 }
 .save:hover { background: #e4e4e7; }
+
+.btn-secondary {
+  background: #27272a;
+  color: #e4e4e7;
+  margin-top: 8px;
+  width: 100%;
+}
+.btn-secondary:hover {
+  background: #3f3f46;
+  color: #fff;
+}
 
 /* PRÉVIA DE IMAGEM (VIEWER) */
 #imageViewer {
@@ -444,6 +485,37 @@ h1 {
   </div>
 </div>
 
+<div class="modal-bg" id="propertiesModal">
+  <div class="modal">
+    <h3>Propriedades do Arquivo</h3>
+    
+    <label style="font-size: 12px; color: #a1a1aa; display:block; margin-bottom: 6px;">Nome do Arquivo</label>
+    <input type="text" id="propNameInput" placeholder="Nome do arquivo">
+    
+    <div class="prop-group">
+      <div class="prop-row">
+        <span class="prop-label">Tamanho:</span>
+        <span class="prop-value" id="propSize">--</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Criado em:</span>
+        <span class="prop-value" id="propDate">--</span>
+      </div>
+      <div class="prop-row">
+        <span class="prop-label">Tipo:</span>
+        <span class="prop-value" id="propType">--</span>
+      </div>
+    </div>
+
+    <button class="btn-secondary" id="btnCopyLink">🔗 Copiar Link Direto</button>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closePropertiesModal()">Cancelar</button>
+      <button class="save" onclick="saveProperties()">Salvar Nome</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="imageViewer" onclick="closeViewer()">
   <span class="close-viewer">&times;</span>
   <img id="previewExpanded" src="" onclick="(e) => e.stopPropagation()">
@@ -464,29 +536,46 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-// Armazenamento local temporário para evitar falhas de aspas no HTML
 let cacheItens = [];
 let currentEditingId = null;
 let currentEditingColumn = 'id';
 
+let currentPropertiesId = null;
+let currentPropertiesColumn = 'id';
+let currentPropertiesUrl = '';
+
 /* ===========================
-   MENU E MODAIS DOS CARDS
+   FORMATADORES AUXILIARES
+=========================== */
+function formatBytes(bytes) {
+  if (!bytes || bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function formatDate(dateString) {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('pt-BR') + ' às ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+/* ===========================
+   CONTROLE DE MENUS E MODAIS
 =========================== */
 document.getElementById("plus").onclick=(e)=>{
   e.stopPropagation();
   menu.style.display = menu.style.display==="flex"?"none":"flex";
 };
 
-// Controla abertura e fechamento de todos os menus suspensos
 window.toggleCardMenu = (event, id) => {
   event.stopPropagation();
   const targetMenu = document.getElementById(`menu-${id}`);
   
-  // Fecha qualquer outro menu de card aberto
   document.querySelectorAll('.card-menu').forEach(m => {
     if(m !== targetMenu) m.style.display = 'none';
   });
-  // Fecha o menu principal de adicionar
   menu.style.display = 'none';
 
   if(targetMenu) {
@@ -498,7 +587,6 @@ document.addEventListener("click",(e)=>{
   if(!menu.contains(e.target) && e.target.id!=="plus"){
     menu.style.display="none";
   }
-  // Se clicar fora, esconde os menus dos cards
   if(!e.target.classList.contains('dots-btn')) {
     document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
   }
@@ -507,24 +595,17 @@ document.addEventListener("click",(e)=>{
 window.openModal=()=>{
   menu.style.display="none";
   document.getElementById("modal").style.display="flex";
-  setTimeout(()=>{
-    document.getElementById("textInput").focus();
-  },100);
+  setTimeout(()=>{ document.getElementById("textInput").focus(); },100);
 };
 
-window.closeModal=()=>{
-  document.getElementById("modal").style.display="none";
-};
+window.closeModal=()=>{ document.getElementById("modal").style.display="none"; };
 
 window.openEditModal=(id, encodedContent, columnName)=>{
   currentEditingId = id;
   currentEditingColumn = columnName || 'id';
   document.getElementById("editTextInput").value = decodeURIComponent(encodedContent);
-  
   document.getElementById("editModal").style.display="flex";
-  setTimeout(()=>{
-    document.getElementById("editTextInput").focus();
-  },100);
+  setTimeout(()=>{ document.getElementById("editTextInput").focus(); },100);
 };
 
 window.closeEditModal=()=>{
@@ -532,8 +613,38 @@ window.closeEditModal=()=>{
   currentEditingId = null;
 };
 
+/* MODAL DE PROPRIEDADES */
+window.openPropertiesModal = (id, columnName) => {
+  const item = cacheItens.find(i => i.id === id || i.uuid === id);
+  if(!item) return;
+
+  currentPropertiesId = id;
+  currentPropertiesColumn = columnName;
+  currentPropertiesUrl = item.url;
+
+  document.getElementById("propNameInput").value = item.nome || "";
+  document.getElementById("propSize").innerText = formatBytes(item.tamanho);
+  document.getElementById("propDate").innerText = formatDate(item.criado_em);
+  document.getElementById("propType").innerText = item.tipo || "Desconhecido";
+
+  document.getElementById("propertiesModal").style.display = "flex";
+};
+
+window.closePropertiesModal = () => {
+  document.getElementById("propertiesModal").style.display = "none";
+  currentPropertiesId = null;
+};
+
+document.getElementById("btnCopyLink").onclick = () => {
+  if(currentPropertiesUrl) {
+    navigator.clipboard.writeText(currentPropertiesUrl)
+      .then(() => alert("Link direto copiado para a área de transferência!"))
+      .catch(err => console.error("Erro ao copiar link:", err));
+  }
+};
+
 /* ===========================
-   PRÉVIA DA IMAGEM
+   PRÉVIA DA IMAGEM E DOWNLOAD
 =========================== */
 window.openViewer=(url)=>{
   document.getElementById("previewExpanded").src = url;
@@ -545,19 +656,14 @@ window.closeViewer=()=>{
   document.getElementById("previewExpanded").src = ""; 
 };
 
-/* ===========================
-   DOWNLOAD FORÇADO (BLOB)
-=========================== */
 window.forceDownload = async (url, filename) => {
   try {
     const response = await fetch(url);
     const blob = await response.blob();
-    
     const blobUrl = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = blobUrl;
     a.download = filename; 
-    
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -569,7 +675,7 @@ window.forceDownload = async (url, filename) => {
 };
 
 /* ===========================
-   FUNCIONALIDADES COPIAR E COLAR
+   COPIAR E COLAR (TEXTOS)
 =========================== */
 window.copyText = (id) => {
   const item = cacheItens.find(i => i.id === id || i.uuid === id);
@@ -584,32 +690,26 @@ window.pasteText = async (id, columnName) => {
   try {
     const textDoClipboard = await navigator.clipboard.readText();
     if(!textDoClipboard.trim()) {
-      alert("A sua área de transferência está vazia ou não contém um texto válido.");
+      alert("A sua área de transferência está vazia.");
       return;
     }
-
     const novoTitulo = textDoClipboard.substring(0, 20).trim() || "Bloco de Notas";
 
     const { error } = await supabase
       .from(TABLE)
-      .update({ 
-        content: textDoClipboard,
-        nome: novoTitulo,
-        tamanho: textDoClipboard.length
-      })
+      .update({ content: textDoClipboard, nome: novoTitulo, tamanho: textDoClipboard.length })
       .eq(columnName, id);
 
     if (error) throw error;
     load();
-    
   } catch (err) {
-    alert("Erro ao colar do sistema. Certifique-se de dar permissão ao navegador.");
+    alert("Erro ao colar do sistema. Verifique as permissões.");
     console.error(err);
   }
 };
 
 /* ===========================
-   TEXTO E ARQUIVOS (CRUD)
+   AÇÕES DO BANCO DE DADOS (CRUD)
 =========================== */
 window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
@@ -630,7 +730,6 @@ window.saveText=async()=>{
 
   if (error) {
     alert("Erro ao salvar texto: " + error.message);
-    console.error(error);
   } else {
     document.getElementById("textInput").value="";
     closeModal();
@@ -646,18 +745,31 @@ window.updateText=async()=>{
 
   const { error } = await supabase
     .from(TABLE)
-    .update({ 
-      content: newText,
-      nome: novoTitulo,
-      tamanho: newText.length
-    })
+    .update({ content: newText, nome: novoTitulo, tamanho: newText.length })
     .eq(currentEditingColumn, currentEditingId);
 
   if (error) {
     alert("Erro ao atualizar texto: " + error.message);
-    console.error(error);
   } else {
     closeEditModal();
+    load();
+  }
+};
+
+// Renomeia o arquivo físico/imagem na tabela através do Modal de Propriedades
+window.saveProperties=async()=>{
+  const newName = document.getElementById("propNameInput").value;
+  if(!newName.trim() || !currentPropertiesId) return;
+
+  const { error } = await supabase
+    .from(TABLE)
+    .update({ nome: newName })
+    .eq(currentPropertiesColumn, currentPropertiesId);
+
+  if(error) {
+    alert("Erro ao renomear arquivo: " + error.message);
+  } else {
+    closePropertiesModal();
     load();
   }
 };
@@ -690,9 +802,9 @@ fileInput.onchange=async(e)=>{
 
     } catch (error) {
       alert("Erro no arquivo: " + error.message);
-      console.error(error);
     }
   }
+  fileInput.value = "";
   load();
 };
 
@@ -708,13 +820,12 @@ async function load(){
     grid.innerHTML="";
     if(!data) return;
     
-    // Atualiza o cache local
     cacheItens = data;
 
     data.forEach((item,i)=>{
       const div=document.createElement("div");
       div.className="card";
-      div.style.animationDelay = `${i * 60}ms`;
+      div.style.animationDelay = `${i * 50}ms`;
 
       const idColumnName = item.hasOwnProperty('uuid') ? 'uuid' : 'id';
       const itemId = item[idColumnName];
@@ -728,6 +839,7 @@ async function load(){
           <div class="card-menu" id="menu-${itemId}">
             <button onclick="window.open('${item.url}', '_blank')">Ver</button>
             <button onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
+            <button onclick="openPropertiesModal('${itemId}', '${idColumnName}')">Propriedades</button>
             <button class="delete-opt" onclick="del('${itemId}','${item.caminho || ''}', '${idColumnName}')">Excluir</button>
           </div>
 
@@ -779,7 +891,6 @@ window.del=async(id, path, columnName = 'id')=>{
     load();
   } catch (error) {
     alert("Erro ao deletar: " + error.message);
-    console.error(error);
   }
 };
 
