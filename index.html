@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive com Ícones</title>
+<title>Drive Final</title>
 
 <style>
 body{
@@ -30,6 +30,7 @@ h1{font-size:22px}
 .actionsTop{
   display:flex;
   gap:10px;
+  align-items:center;
 }
 
 /* BOTÃO + */
@@ -45,11 +46,6 @@ h1{font-size:22px}
   display:flex;
   align-items:center;
   justify-content:center;
-}
-
-.iconBtn:hover{
-  background:#fff;
-  color:#000;
 }
 
 /* MENU */
@@ -72,10 +68,14 @@ h1{font-size:22px}
   color:#fff;
   padding:12px;
   cursor:pointer;
-  text-align:left;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.menu button:hover{background:#222}
+.menu button:hover{
+  background:#222;
+}
 
 /* GRID */
 .grid{
@@ -97,6 +97,7 @@ h1{font-size:22px}
   to{opacity:1;transform:translateY(0)}
 }
 
+/* PREVIEW */
 .preview{
   height:140px;
   background:#000;
@@ -107,17 +108,18 @@ h1{font-size:22px}
   overflow:hidden;
 }
 
-/* IMAGENS */
-.preview img{
+/* imagem normal */
+.preview img.file-img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* ÍCONES */
+/* ícones pequenos centralizados */
 .icon{
   width:55px;
   height:55px;
+  object-fit:contain;
   opacity:0.9;
 }
 
@@ -160,15 +162,21 @@ button,a{
 <div class="app">
 
 <header>
-  <h1>Drive com Ícones</h1>
+  <h1>Drive Final</h1>
 
   <div style="position:relative" class="actionsTop">
 
     <button class="iconBtn" id="plus">+</button>
 
+    <!-- MENU COM ÍCONES -->
     <div class="menu" id="menu">
-      <button onclick="selectFile()">📁 Arquivo</button>
-      <button onclick="addText()">📝 Texto</button>
+      <button onclick="selectFile()">
+        <img src="av.png" width="18"> Arquivo
+      </button>
+
+      <button onclick="addText()">
+        <img src="tx.png" width="18"> Texto
+      </button>
     </div>
 
     <input type="file" id="file" multiple style="display:none">
@@ -197,7 +205,7 @@ const plus=document.getElementById("plus");
 
 /* MENU */
 plus.onclick=()=>{
-  menu.style.display = menu.style.display==="flex"?"none":"flex";
+  menu.style.display = menu.style.display==="flex" ? "none":"flex";
 };
 
 document.addEventListener("click",(e)=>{
@@ -276,13 +284,14 @@ async function load(){
       div.innerHTML=`
         <div class="preview">
           ${item.tipo?.startsWith("image/")
-            ? `<img src="${item.url}">`
+            ? `<img class="file-img" src="${item.url}">`
             : `<img class="icon" src="av.png">`}
         </div>
 
         <div>${item.nome}</div>
 
         <a class="download" href="${item.url}" download>Baixar</a>
+        <button class="delete" onclick="del('${item.id}','${item.caminho}')">Excluir</button>
       `;
     }
 
