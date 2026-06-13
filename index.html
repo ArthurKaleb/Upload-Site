@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive Simples</title>
+<title>Drive com Ícones</title>
 
 <style>
 body{
@@ -75,9 +75,7 @@ h1{font-size:22px}
   text-align:left;
 }
 
-.menu button:hover{
-  background:#222;
-}
+.menu button:hover{background:#222}
 
 /* GRID */
 .grid{
@@ -109,13 +107,21 @@ h1{font-size:22px}
   overflow:hidden;
 }
 
-img,video{
+/* IMAGENS */
+.preview img{
   width:100%;
   height:100%;
   object-fit:cover;
 }
 
-/* TEXTOS */
+/* ÍCONES */
+.icon{
+  width:55px;
+  height:55px;
+  opacity:0.9;
+}
+
+/* TEXT AREA */
 textarea{
   width:100%;
   background:#000;
@@ -154,14 +160,12 @@ button,a{
 <div class="app">
 
 <header>
-  <h1>Drive Limpo</h1>
+  <h1>Drive com Ícones</h1>
 
   <div style="position:relative" class="actionsTop">
 
-    <!-- BOTÃO + -->
     <button class="iconBtn" id="plus">+</button>
 
-    <!-- MENU -->
     <div class="menu" id="menu">
       <button onclick="selectFile()">📁 Arquivo</button>
       <button onclick="addText()">📝 Texto</button>
@@ -191,9 +195,9 @@ const fileInput=document.getElementById("file");
 const menu=document.getElementById("menu");
 const plus=document.getElementById("plus");
 
-/* MENU + */
+/* MENU */
 plus.onclick=()=>{
-  menu.style.display = menu.style.display==="flex" ? "none":"flex";
+  menu.style.display = menu.style.display==="flex"?"none":"flex";
 };
 
 document.addEventListener("click",(e)=>{
@@ -202,7 +206,7 @@ document.addEventListener("click",(e)=>{
   }
 });
 
-/* UPLOAD ARQUIVO */
+/* UPLOAD */
 window.selectFile=()=>{
   fileInput.click();
 };
@@ -227,6 +231,7 @@ fileInput.onchange=async(e)=>{
       url:data.publicUrl,
       caminho:path,
       tipo_item:"file",
+      content:"",
       criado_em:new Date()
     });
   }
@@ -263,27 +268,32 @@ async function load(){
 
     const div=document.createElement("div");
     div.className="card";
-    div.style.animationDelay=`${i*60}ms`;
+    div.style.animationDelay=`${i*50}ms`;
 
+    /* FILE */
     if(item.tipo_item==="file"){
 
       div.innerHTML=`
         <div class="preview">
           ${item.tipo?.startsWith("image/")
             ? `<img src="${item.url}">`
-            : "📄"}
+            : `<img class="icon" src="av.png">`}
         </div>
 
         <div>${item.nome}</div>
 
         <a class="download" href="${item.url}" download>Baixar</a>
-        <button class="delete" onclick="del('${item.id}','${item.caminho}')">Excluir</button>
       `;
     }
 
+    /* TEXT */
     else{
 
       div.innerHTML=`
+        <div class="preview">
+          <img class="icon" src="tx.png">
+        </div>
+
         <textarea id="t-${item.id}">${item.content}</textarea>
 
         <div class="actions">
