@@ -261,6 +261,16 @@ button, .btn-link {
 }
 .download:hover { background: #e4e4e7; }
 
+.edit-btn {
+  background: #27272a;
+  color: #e4e4e7;
+  flex-grow: 1;
+}
+.edit-btn:hover {
+  background: #3f3f46;
+  color: #fff;
+}
+
 .delete {
   background: transparent;
   border: 1px solid #3f3f46;
@@ -272,18 +282,9 @@ button, .btn-link {
   border-color: #f43f5e;
 }
 
-.delete-full {
-  width: 100%;
-  background: #27272a;
-  border: none;
-}
-.delete-full:hover {
-  background: #f43f5e;
-}
-
 /* ==========================================================================
    MODAIS (TEXTO E PRÉVIA DE IMAGEM)
-   ========================================================================= */
+   ========================================================================== */
 .modal-bg {
   position: fixed;
   inset: 0;
@@ -418,6 +419,17 @@ button, .btn-link {
   </div>
 </div>
 
+<div class="modal-bg" id="editModal">
+  <div class="modal">
+    <h3>Editar texto</h3>
+    <textarea id="editTextInput" placeholder="Modifique seu bloco de notas aqui..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">Cancelar</button>
+      <button class="save" onclick="updateText()">Salvar Alterações</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="imageViewer" onclick="closeViewer()">
   <span class="close-viewer">&times;</span>
   <img id="previewExpanded" src="" onclick="(e) => e.stopPropagation()">
@@ -437,6 +449,9 @@ const TABLE="arquivos";
 const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
+
+// Controla qual uuid está sendo editado no momento
+let currentEditingUuid = null;
 
 /* ===========================
    MENU E MODAIS
@@ -462,6 +477,20 @@ window.openModal=()=>{
 
 window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
+};
+
+window.openEditModal=(uuid, currentContent)=>{
+  currentEditingUuid = uuid;
+  document.getElementById("editTextInput").value = currentContent;
+  document.getElementById("editModal").style.display="flex";
+  setTimeout(()=>{
+    document.getElementById("editTextInput").focus();
+  },100);
+};
+
+window.closeEditModal=()=>{
+  document.getElementById("editModal").style.display="none";
+  currentEditingUuid = null;
 };
 
 /* ===========================
@@ -509,15 +538,14 @@ window.saveText=async()=>{
 
   const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
 
-  // CORREÇÃO DEFINITIVA: Passando "text-note" no lugar de null para satisfazer a restrição NOT NULL das colunas url e caminho
   const { error } = await supabase.from(TABLE).insert({
     tipo_item: "text",
     content: text,
     nome: tituloNota,
     tipo: "text/plain",
     tamanho: text.length,
-    url: "text-note",       // Preenchido para não quebrar a restrição do banco
-    caminho: "text-note",   // Preenchido para não quebrar a restrição do banco
+    url: "text-note",       
+    caminho: "text-note",   
     criado_em: new Date()
   });
 
@@ -527,6 +555,31 @@ window.saveText=async()=>{
   } else {
     document.getElementById("textInput").value="";
     closeModal();
+    load();
+  }
+};
+
+// Nova função para atualizar o texto existente no banco
+window.updateText=async()=>{
+  const newText=document.getElementById("editTextInput").value;
+  if(!newText.trim() || !currentEditingUuid) return;
+
+  const novoTitulo = newText.substring(0, 20).trim() || "Bloco de Notas";
+
+  const { error } = await supabase
+    .from(TABLE)
+    .update({ 
+      content: newText,
+      nome: novoTitulo,
+      tamanho: newText.length
+    })
+    .eq("uuid", currentEditingUuid);
+
+  if (error) {
+    alert("Erro ao atualizar texto: " + error.message);
+    console.error(error);
+  } else {
+    closeEditModal();
     load();
   }
 };
@@ -604,6 +657,9 @@ async function load(){
           </div>
         `;
       } else {
+        // Escapando as aspas simples do texto para evitar erros no atributo HTML
+        const safeContent = (item.content || "").replace(/'/g, "\\'");
+
         div.innerHTML=`
           <div class="preview">
             <div class="preview-text">${item.content || ""}</div>
@@ -611,7 +667,8 @@ async function load(){
           <div class="card-body">
             <div class="card-text">${item.content || ""}</div>
             <div class="card-actions">
-              <button class="delete delete-full" onclick="del('${itemId}','')">Excluir Nota</button>
+              <button class="edit-btn" onclick="openEditModal('${itemId}', '${safeContent}')">Editar</button>
+              <button class="delete" onclick="del('${itemId}','')">Excluir</button>
             </div>
           </div>
         `;
@@ -625,7 +682,6 @@ async function load(){
 
 window.del=async(id,path)=>{
   try {
-    // Só tenta apagar do storage se o caminho for de um arquivo real e válido
     if(path && path.trim() !== "" && path !== "text-note"){
       await supabase.storage.from(BUCKET).remove([path]);
     }
