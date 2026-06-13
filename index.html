@@ -159,7 +159,7 @@ h1 {
   opacity: 0.8;
 }
 
-/* PREVIEW BONITO PARA NOTAS DE TEXTO */
+/* PREVIEW PARA NOTAS DE TEXTO */
 .preview-text {
   padding: 20px;
   font-size: 14px;
@@ -190,7 +190,7 @@ h1 {
   opacity: 1;
 }
 
-/* ÁREA DE TEXTO/INFORMAÇÕES INTERNAS DO CARD */
+/* ÁREA DE TEXTO INTERNA DO CARD */
 .card-body {
   padding: 14px;
   display: flex;
@@ -507,13 +507,15 @@ window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
   if(!text.trim()) return;
 
-  // Corrigido adicionando tamanho: null conforme a estrutura real da tabela
+  // CORREÇÃO: Enviando uma string válida para "nome" para satisfazer a regra NOT-NULL do banco
+  const tituloNota = text.substring(0, 20).trim() || "Bloco de Notas";
+
   const { error } = await supabase.from(TABLE).insert({
     tipo_item: "text",
     content: text,
-    nome: null,
-    tipo: null,
-    tamanho: null,
+    nome: tituloNota, // Não é mais enviado como null
+    tipo: "text/plain",
+    tamanho: text.length,
     url: null,
     caminho: null,
     criado_em: new Date()
@@ -546,7 +548,7 @@ fileInput.onchange=async(e)=>{
       const insertRes = await supabase.from(TABLE).insert({
         nome:file.name,
         tipo:file.type,
-        tamanho: file.size, // Passando o tamanho real do arquivo
+        tamanho: file.size,
         url:data.publicUrl,
         caminho:path,
         tipo_item:"file",
@@ -580,7 +582,6 @@ async function load(){
       div.className="card";
       div.style.animationDelay = `${i * 80}ms`;
 
-      // Armazena o ID correto baseado na coluna da sua tabela (uuid)
       const itemId = item.uuid;
 
       if(item.tipo_item==="file"){
@@ -603,7 +604,6 @@ async function load(){
           </div>
         `;
       } else {
-        // Renderização otimizada para blocos de notas (mostra o texto na prévia)
         div.innerHTML=`
           <div class="preview">
             <div class="preview-text">${item.content || ""}</div>
@@ -628,7 +628,6 @@ window.del=async(id,path)=>{
     if(path && path.trim() !== ""){
       await supabase.storage.from(BUCKET).remove([path]);
     }
-    // Alterado o filtro de .eq("id", id) para .eq("uuid", id) combinando com a tabela
     const { error } = await supabase.from(TABLE).delete().eq("uuid", id);
     if(error) throw error;
     load();
