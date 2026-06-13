@@ -450,8 +450,9 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-// Controla qual ID está sendo editado no momento
+// Variáveis dinâmicas para a edição
 let currentEditingId = null;
+let currentEditingColumn = 'id';
 
 /* ===========================
    MENU E MODAIS
@@ -479,10 +480,12 @@ window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
 };
 
-window.openEditModal=(id, currentContent)=>{
+// Agora recebe a coluna dinamicamente e decodifica o texto com segurança
+window.openEditModal=(id, encodedContent, columnName)=>{
   currentEditingId = id;
-  // Desfaz a formatação para exibir o texto corretamente
-  document.getElementById("editTextInput").value = currentContent.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
+  currentEditingColumn = columnName || 'id';
+  document.getElementById("editTextInput").value = decodeURIComponent(encodedContent);
+  
   document.getElementById("editModal").style.display="flex";
   setTimeout(()=>{
     document.getElementById("editTextInput").focus();
@@ -525,7 +528,7 @@ window.forceDownload = async (url, filename) => {
     document.body.removeChild(a);
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.error("Erro ao forçar download, abrindo em nova guia", error);
+    console.error("Erro ao forçar download", error);
     window.open(url, '_blank');
   }
 };
@@ -551,7 +554,7 @@ window.saveText=async()=>{
   });
 
   if (error) {
-    alert("Erro do Supabase ao salvar texto: " + error.message);
+    alert("Erro ao salvar texto: " + error.message);
     console.error(error);
   } else {
     document.getElementById("textInput").value="";
@@ -560,7 +563,7 @@ window.saveText=async()=>{
   }
 };
 
-// Editando usando o campo "id" que é o nome real da coluna no Supabase
+// Edita usando a coluna que foi identificada automaticamente pelo load()
 window.updateText=async()=>{
   const newText=document.getElementById("editTextInput").value;
   if(!newText.trim() || !currentEditingId) return;
@@ -574,7 +577,7 @@ window.updateText=async()=>{
       nome: novoTitulo,
       tamanho: newText.length
     })
-    .eq("id", currentEditingId);
+    .eq(currentEditingColumn, currentEditingId);
 
   if (error) {
     alert("Erro ao atualizar texto: " + error.message);
@@ -636,8 +639,11 @@ async function load(){
       div.className="card";
       div.style.animationDelay = `${i * 80}ms`;
 
-      // Garante que pegamos o id corretamente da base de dados
-      const itemId = item.id;
+      // ----------------------------------------------------------------------
+      // MAGIA ACONTECENDO AQUI: Identifica automaticamente a sua coluna de ID
+      // ----------------------------------------------------------------------
+      const idColumnName = item.hasOwnProperty('uuid') ? 'uuid' : 'id';
+      const itemId = item[idColumnName];
 
       if(item.tipo_item==="file"){
         const isImage = item.tipo?.startsWith("image/");
@@ -654,18 +660,13 @@ async function load(){
             <div class="card-actions">
               <button class="view" onclick="window.open('${item.url}', '_blank')">Ver</button>
               <button class="download" onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
-              <button class="delete" onclick="del('${itemId}','${item.caminho || ''}')">Excluir</button>
+              <button class="delete" onclick="del('${itemId}','${item.caminho || ''}', '${idColumnName}')">Excluir</button>
             </div>
           </div>
         `;
       } else {
-        // Escapando aspas e quebras de linha para evitar que o código HTML quebre
-        const safeContent = (item.content || "")
-          .replace(/\\/g, "\\\\")
-          .replace(/'/g, "\\'")
-          .replace(/"/g, '\\"')
-          .replace(/\n/g, "\\n")
-          .replace(/\r/g, "\\r");
+        // Criptografia leve para impedir que quebras de linha quebrem o botão
+        const safeContent = encodeURIComponent(item.content || "");
 
         div.innerHTML=`
           <div class="preview">
@@ -674,8 +675,8 @@ async function load(){
           <div class="card-body">
             <div class="card-text">${item.content || ""}</div>
             <div class="card-actions">
-              <button class="edit-btn" onclick="openEditModal('${itemId}', '${safeContent}')">Editar</button>
-              <button class="delete" onclick="del('${itemId}','')">Excluir</button>
+              <button class="edit-btn" onclick="openEditModal('${itemId}', '${safeContent}', '${idColumnName}')">Editar</button>
+              <button class="delete" onclick="del('${itemId}','', '${idColumnName}')">Excluir</button>
             </div>
           </div>
         `;
@@ -687,13 +688,13 @@ async function load(){
   }
 }
 
-// Usando .eq("id", ...) conforme a estrutura nativa
-window.del=async(id,path)=>{
+// O Delete também recebe a coluna dinamicamente
+window.del=async(id, path, columnName = 'id')=>{
   try {
     if(path && path.trim() !== "" && path !== "text-note"){
       await supabase.storage.from(BUCKET).remove([path]);
     }
-    const { error } = await supabase.from(TABLE).delete().eq("id", id);
+    const { error } = await supabase.from(TABLE).delete().eq(columnName, id);
     if(error) throw error;
     load();
   } catch (error) {
