@@ -450,7 +450,7 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-// ALTERAÇÃO: Ajustado o nome do estado de controle para referenciar a coluna real 'id'
+// Controla qual ID está sendo editado no momento
 let currentEditingId = null;
 
 /* ===========================
@@ -479,10 +479,10 @@ window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
 };
 
-// ALTERAÇÃO: Ajustado parâmetro para 'id' e tratamento reverso das quebras de linha (\n)
 window.openEditModal=(id, currentContent)=>{
   currentEditingId = id;
-  document.getElementById("editTextInput").value = currentContent.replace(/\\n/g, '\n');
+  // Desfaz a formatação para exibir o texto corretamente
+  document.getElementById("editTextInput").value = currentContent.replace(/\\n/g, '\n').replace(/\\r/g, '\r');
   document.getElementById("editModal").style.display="flex";
   setTimeout(()=>{
     document.getElementById("editTextInput").focus();
@@ -560,7 +560,7 @@ window.saveText=async()=>{
   }
 };
 
-// ALTERAÇÃO: Atualizada para executar o filtro correto apontando para a coluna real ".eq('id', ...)"
+// Editando usando o campo "id" que é o nome real da coluna no Supabase
 window.updateText=async()=>{
   const newText=document.getElementById("editTextInput").value;
   if(!newText.trim() || !currentEditingId) return;
@@ -636,7 +636,7 @@ async function load(){
       div.className="card";
       div.style.animationDelay = `${i * 80}ms`;
 
-      // ALTERAÇÃO: Mapeando a coluna real primária do banco 'item.id'
+      // Garante que pegamos o id corretamente da base de dados
       const itemId = item.id;
 
       if(item.tipo_item==="file"){
@@ -659,7 +659,7 @@ async function load(){
           </div>
         `;
       } else {
-        // ALTERAÇÃO: Tratamento completo de caracteres especiais e quebras de linha para não corromper o HTML do onclick
+        // Escapando aspas e quebras de linha para evitar que o código HTML quebre
         const safeContent = (item.content || "")
           .replace(/\\/g, "\\\\")
           .replace(/'/g, "\\'")
@@ -687,7 +687,7 @@ async function load(){
   }
 }
 
-// ALTERAÇÃO: Ajustado para deletar filtrando por .eq("id", id) mapeando a coluna real
+// Usando .eq("id", ...) conforme a estrutura nativa
 window.del=async(id,path)=>{
   try {
     if(path && path.trim() !== "" && path !== "text-note"){
