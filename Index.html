@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meus Arquivos</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #050505;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .app {
+      padding: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: 26px;
+    }
+
+    .upload-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid #333;
+      background: #111;
+      color: #fff;
+      font-size: 30px;
+      cursor: pointer;
+    }
+
+    .upload-btn:hover {
+      background: #fff;
+      color: #000;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .drop-zone {
+      border: 1px dashed #333;
+      padding: 25px;
+      text-align: center;
+      margin-bottom: 20px;
+      color: #777;
+    }
+
+    .files-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background: #0d0d0d;
+      border: 1px solid #1f1f1f;
+      padding: 15px;
+      border-radius: 15px;
+    }
+
+    .preview {
+      height: 140px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .preview img,
+    .preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .name {
+      font-size: 14px;
+      margin-bottom: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .info {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    button, a {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .download {
+      background: #fff;
+      color: #000;
+    }
+
+    .delete {
+      background: #1a1a1a;
+      color: red;
+    }
+
+    .empty {
+      text-align: center;
+      margin-top: 50px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <header>
+      <h1>Meus Arquivos</h1>
+      <button class="upload-btn" id="btn">+</button>
+      <input type="file" id="fileInput" multiple />
+    </header>
+
+    <div class="drop-zone">Arraste arquivos ou clique no +</div>
+
+    <div class="files-grid" id="grid"></div>
+
+    <div class="empty" id="empty">Nenhum arquivo ainda</div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    // 🔥 SUAS CHAVES
+    const SUPABASE_URL = "https://uositywnpexfdykxrsda.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvc3VieXducGV4ZmR5a3hyc2RhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDAyNjIsImV4cCI6MjA5Njg3NjI2Mn0.34RZ5KB3a6YBuQvvcbjLxvcUiyObK98kstxq6iCfBbk";
+
+    const BUCKET = "arquivos";
+    const TABLE = "arquivos";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const btn = document.getElementById("btn");
+    const fileInput = document.getElementById("fileInput");
+    const grid = document.getElementById("grid");
+    const empty = document.getElementById("empty");
+
+    btn.onclick = () => fileInput.click();
+
+    fileInput.onchange = async (e) => {
+      await uploadFiles(e.target.files);
+    };
+
+    async function uploadFiles(files) {
+      for (let file of files) {
+
+        const path = `${Date.now()}-${file.name}`;
+
+        await supabase.storage
+          .from(BUCKET)
+          .upload(path, file);
+
+        const { data } = supabase.storage
+          .from(BUCKET)
+          .getPublicUrl(path);
+
+        await supabase.from(TABLE).insert({
+          nome: file.name,
+          tipo: file.type,
+          tamanho: file.size,
+          url: data.publicUrl,
+          caminho: path
+        });
+      }
+
+      loadFiles();
+    }
+
+    async function loadFiles() {
+      const { data } = await supabase
+        .from(TABLE)
+        .select("*")
+        .order("criado_em", { ascending: false });
+
+      grid.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        empty.style.display = "block";
+        return;
+      }
+
+      empty.style.display = "none";
+
+      data.forEach(file => {
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+          <div class="preview">
+            ${file.tipo.startsWith("image/")
+              ? `<img src="${file.url}"/>`
+              : file.tipo.startsWith("video/")
+              ? `<video src="${file.url}" controls></video>`
+              : "📄"}
+          </div>
+
+          <div class="name">${file.nome}</div>
+
+          <div class="info">
+            ${(file.tamanho / 1024).toFixed(1)} KB
+          </div>
+
+          <div class="actions">
+            <a class="download" href="${file.url}" target="_blank">Abrir</a>
+            <button class="delete" onclick="deleteFile('${file.id}','${file.caminho}')">Excluir</button>
+          </div>
+        `;
+
+        grid.appendChild(div);
+      });
+    }
+
+    window.deleteFile = async (id, path) => {
+      await supabase.storage.from(BUCKET).remove([path]);
+      await supabase.from(TABLE).delete().eq("id", id);
+      loadFiles();
+    };
+
+    loadFiles();
+  </script>
+</body>
+</html>
