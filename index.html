@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive + Notificações</title>
+<title>Drive com Delay</title>
 
 <style>
 body{
@@ -51,30 +51,21 @@ h1{font-size:22px}
   gap:15px;
 }
 
+/* 🔥 ANIMAÇÃO COM DELAY */
 .card{
   background:#111;
   padding:12px;
   border-radius:12px;
-  animation:fade .2s ease-in;
+  opacity:0;
+  transform:translateY(10px);
+  animation:fadeIn .35s ease forwards;
 }
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-/* TOAST NOTIFICAÇÃO */
-.toast{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#fff;
-  color:#000;
-  padding:12px 16px;
-  border-radius:10px;
-  font-size:13px;
-  display:none;
-  box-shadow:0 10px 20px rgba(0,0,0,.4);
+@keyframes fadeIn{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 .preview{
@@ -103,6 +94,17 @@ button,a{
 
 .download{background:#fff;color:#000;text-decoration:none}
 .delete{background:#222;color:red}
+
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#fff;
+  color:#000;
+  padding:10px 14px;
+  border-radius:8px;
+  display:none;
+}
 </style>
 </head>
 
@@ -111,14 +113,10 @@ button,a{
 <div class="app">
 
 <header>
-  <h1>Drive Inteligente</h1>
+  <h1>Drive com Delay</h1>
 
   <div class="actionsTop">
-
-    <!-- NOTIFICAÇÃO TOGGLE -->
-    <button class="btn" id="notifBtn">🔔</button>
-
-    <!-- UPLOAD -->
+    <button class="btn" id="notif">🔔</button>
     <button class="btn" id="add">+</button>
     <input type="file" id="file" multiple style="display:none">
   </div>
@@ -144,34 +142,14 @@ const TABLE="arquivos";
 const grid=document.getElementById("grid");
 const fileInput=document.getElementById("file");
 const toast=document.getElementById("toast");
-const notifBtn=document.getElementById("notifBtn");
 
 document.getElementById("add").onclick=()=>fileInput.click();
 
-/* =====================
-   NOTIFICAÇÃO STATE
-===================== */
-let notificationsEnabled =
-localStorage.getItem("notif") === "true";
-
-updateNotifUI();
-
-notifBtn.onclick=()=>{
-  notificationsEnabled = !notificationsEnabled;
-  localStorage.setItem("notif", notificationsEnabled);
-  updateNotifUI();
-  subscribeNotifications();
-};
-
-function updateNotifUI(){
-  notifBtn.style.background = notificationsEnabled ? "#fff" : "#111";
-  notifBtn.style.color = notificationsEnabled ? "#000" : "#fff";
-}
-
-/* =====================
+/* ======================
    UPLOAD
-===================== */
+====================== */
 fileInput.onchange=async(e)=>{
+
   for(let file of e.target.files){
 
     const path=`${Date.now()}_${file.name}`;
@@ -191,19 +169,14 @@ fileInput.onchange=async(e)=>{
       caminho:path,
       criado_em:new Date()
     });
-
-    // 🔥 DISPARA NOTIFICAÇÃO GLOBAL
-    await supabase.from("notifications").insert({
-      message:`Novo arquivo enviado: ${file.name}`
-    });
   }
 
   load();
 };
 
-/* =====================
-   LOAD FILES
-===================== */
+/* ======================
+   LOAD COM DELAY
+====================== */
 async function load(){
 
   const {data}=await supabase
@@ -213,33 +186,38 @@ async function load(){
 
   grid.innerHTML="";
 
-  data.forEach(f=>{
+  if(!data) return;
+
+  data.forEach((file,index)=>{
 
     const div=document.createElement("div");
     div.className="card";
 
+    // 🔥 DELAY CRESCENTE
+    div.style.animationDelay = `${index * 80}ms`;
+
     div.innerHTML=`
       <div class="preview">
-        ${f.tipo?.startsWith("image/")
-          ? `<img src="${f.url}">`
-          : f.tipo?.startsWith("video/")
-          ? `<video src="${f.url}" controls></video>`
+        ${file.tipo?.startsWith("image/")
+          ? `<img src="${file.url}">`
+          : file.tipo?.startsWith("video/")
+          ? `<video src="${file.url}" controls></video>`
           : "📄"}
       </div>
 
-      <div>${f.nome}</div>
+      <div>${file.nome}</div>
 
-      <a class="download" href="${f.url}" download>Baixar</a>
-      <button class="delete" onclick="del('${f.id}','${f.caminho}')">Excluir</button>
+      <a class="download" href="${file.url}" download>Baixar</a>
+      <button class="delete" onclick="del('${file.id}','${file.caminho}')">Excluir</button>
     `;
 
     grid.appendChild(div);
   });
 }
 
-/* =====================
+/* ======================
    DELETE
-===================== */
+====================== */
 window.del=async(id,path)=>{
 
   await supabase.storage.from(BUCKET).remove([path]);
@@ -248,39 +226,16 @@ window.del=async(id,path)=>{
   load();
 };
 
-/* =====================
-   NOTIFICAÇÕES REALTIME
-===================== */
-function subscribeNotifications(){
-
-  supabase.channel('notif')
-  .on(
-    'postgres_changes',
-    {
-      event:'INSERT',
-      schema:'public',
-      table:'notifications'
-    },
-    (payload)=>{
-
-      if(!notificationsEnabled) return;
-
-      showToast(payload.new.message);
-    }
-  )
-  .subscribe();
-}
-
-function showToast(msg){
-  toast.innerText = msg;
+/* ======================
+   NOTIFICAÇÃO SIMPLES
+====================== */
+function toastMsg(msg){
+  toast.innerText=msg;
   toast.style.display="block";
 
-  setTimeout(()=>{
-    toast.style.display="none";
-  },3000);
+  setTimeout(()=>toast.style.display="none",2000);
 }
 
-subscribeNotifications();
 load();
 </script>
 
