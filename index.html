@@ -137,12 +137,19 @@ h1 {
   justify-content: center;
   overflow: hidden;
   border-bottom: 1px solid #27272a;
+  position: relative;
 }
 
 .preview img.real {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.preview img.real:hover {
+  transform: scale(1.05); /* Efeito de zoom sutil para indicar clique */
 }
 
 .iconFile {
@@ -150,6 +157,23 @@ h1 {
   height: 44px;
   object-fit: contain;
   opacity: 0.8;
+}
+
+/* LUPA SOBRE A IMAGEM DE PRÉVIA */
+.zoom-hint {
+  position: absolute;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.preview:hover .zoom-hint {
+  opacity: 1;
 }
 
 /* ÁREA DE TEXTO/INFORMAÇÕES INTERNAS DO CARD */
@@ -227,12 +251,12 @@ button, .btn-link {
 }
 
 /* ==========================================================================
-   MODAL DE TEXTO OTIMIZADO
+   MODAIS (TEXTO E PRÉVIA DE IMAGEM)
    ========================================================================== */
 .modal-bg {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(4px);
   display: none;
   align-items: center;
@@ -299,6 +323,28 @@ button, .btn-link {
   color: #09090b;
 }
 .save:hover { background: #e4e4e7; }
+
+/* PRÉVIA DE IMAGEM (VIEWER) */
+#imageViewer {
+  flex-direction: column;
+}
+#previewExpanded {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+}
+.close-viewer {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: #a1a1aa;
+  font-size: 36px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-viewer:hover { color: #fff; }
 </style>
 </head>
 
@@ -340,6 +386,11 @@ button, .btn-link {
   </div>
 </div>
 
+<div class="modal-bg" id="imageViewer" onclick="closeViewer()">
+  <span class="close-viewer">&times;</span>
+  <img id="previewExpanded" src="" onclick="(e) => e.stopPropagation()">
+</div>
+
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -355,7 +406,9 @@ const grid=document.getElementById("grid");
 const menu=document.getElementById("menu");
 const fileInput=document.getElementById("file");
 
-/* MENU INTERATIVO */
+/* ===========================
+   MENU E MODAIS
+=========================== */
 document.getElementById("plus").onclick=(e)=>{
   e.stopPropagation();
   menu.style.display = menu.style.display==="flex"?"none":"flex";
@@ -367,7 +420,6 @@ document.addEventListener("click",(e)=>{
   }
 });
 
-/* CONTROLE DO MODAL */
 window.openModal=()=>{
   menu.style.display="none";
   document.getElementById("modal").style.display="flex";
@@ -380,6 +432,49 @@ window.closeModal=()=>{
   document.getElementById("modal").style.display="none";
 };
 
+/* ===========================
+   PRÉVIA DA IMAGEM
+=========================== */
+window.openViewer=(url)=>{
+  document.getElementById("previewExpanded").src = url;
+  document.getElementById("imageViewer").style.display="flex";
+};
+
+window.closeViewer=()=>{
+  document.getElementById("imageViewer").style.display="none";
+  document.getElementById("previewExpanded").src = ""; // limpa para não bugar a próxima abertura
+};
+
+/* ===========================
+   DOWNLOAD FORÇADO (BLOB)
+=========================== */
+window.forceDownload = async (url, filename) => {
+  try {
+    // Busca o arquivo como pacote de dados
+    const response = await fetch(url);
+    const blob = await response.blob();
+    
+    // Cria um link temporário na memória do navegador
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = filename; // Força o nome do arquivo
+    
+    // Clica invisivelmente e limpa a memória
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Erro ao forçar download, abrindo em nova guia", error);
+    // Fallback: se o navegador bloquear o fetch por segurança de domínio, ele abre normal
+    window.open(url, '_blank');
+  }
+};
+
+/* ===========================
+   TEXTO E ARQUIVOS (CRUD)
+=========================== */
 window.saveText=async()=>{
   const text=document.getElementById("textInput").value;
   if(!text.trim()) return;
@@ -398,7 +493,6 @@ window.saveText=async()=>{
   }
 };
 
-/* OPERAÇÕES DE ARQUIVO */
 window.selectFile=()=>{
   menu.style.display="none";
   fileInput.click();
@@ -426,7 +520,6 @@ fileInput.onchange=async(e)=>{
   load();
 };
 
-/* RENDERIZAÇÃO E ATUALIZAÇÃO DA GRADE */
 async function load(){
   try {
     const {data}=await supabase
@@ -440,19 +533,23 @@ async function load(){
     data.forEach((item,i)=>{
       const div=document.createElement("div");
       div.className="card";
-      div.style.animationDelay = `${i * 80}ms`; // Animação staggered fluida
+      div.style.animationDelay = `${i * 80}ms`;
 
       if(item.tipo_item==="file"){
+        // Verifica se é imagem para habilitar o click de Prévia
+        const isImage = item.tipo?.startsWith("image/");
+        
         div.innerHTML=`
           <div class="preview">
-            ${item.tipo?.startsWith("image/")
-              ? `<img class="real" src="${item.url}">`
+            ${isImage
+              ? `<img class="real" src="${item.url}" onclick="openViewer('${item.url}')">
+                 <span class="zoom-hint">🔍 Expandir</span>`
               : `<img class="iconFile" src="av.png">`}
           </div>
           <div class="card-body">
             <div class="card-title" title="${item.nome}">${item.nome}</div>
             <div class="card-actions">
-              <a class="btn-link download" href="${item.url}" download target="_blank">Baixar</a>
+              <button class="download" onclick="forceDownload('${item.url}', '${item.nome}')">Baixar</button>
               <button class="delete" onclick="del('${item.id}','${item.caminho || ''}')">Excluir</button>
             </div>
           </div>
@@ -477,7 +574,6 @@ async function load(){
   }
 }
 
-/* EXCLUSÃO SEGUIDA DE LIMPEZA */
 window.del=async(id,path)=>{
   try {
     if(path && path.trim() !== ""){
@@ -490,7 +586,6 @@ window.del=async(id,path)=>{
   }
 };
 
-// Executa na carga inicial da página
 load();
 </script>
 
