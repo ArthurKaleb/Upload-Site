@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Drive com Delay</title>
+<title>Drive Completo</title>
 
 <style>
 body{
@@ -27,11 +27,6 @@ header{
 
 h1{font-size:22px}
 
-.actionsTop{
-  display:flex;
-  gap:10px;
-}
-
 .btn{
   width:45px;height:45px;
   border-radius:50%;
@@ -44,6 +39,32 @@ h1{font-size:22px}
 
 .btn:hover{background:#fff;color:#000}
 
+/* MENU DO + */
+.menu{
+  position:absolute;
+  top:70px;
+  right:30px;
+  background:#111;
+  border:1px solid #333;
+  border-radius:10px;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.menu button{
+  background:none;
+  border:none;
+  color:#fff;
+  padding:12px;
+  text-align:left;
+  cursor:pointer;
+}
+
+.menu button:hover{
+  background:#222;
+}
+
 .grid{
   margin-top:20px;
   display:grid;
@@ -51,21 +72,17 @@ h1{font-size:22px}
   gap:15px;
 }
 
-/* 🔥 ANIMAÇÃO COM DELAY */
 .card{
   background:#111;
   padding:12px;
   border-radius:12px;
   opacity:0;
   transform:translateY(10px);
-  animation:fadeIn .35s ease forwards;
+  animation:fade .3s ease forwards;
 }
 
-@keyframes fadeIn{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+@keyframes fade{
+  to{opacity:1;transform:translateY(0)}
 }
 
 .preview{
@@ -84,6 +101,22 @@ img,video{
   object-fit:cover;
 }
 
+textarea{
+  width:100%;
+  background:#000;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:8px;
+  padding:8px;
+  resize:none;
+}
+
+.actions{
+  display:flex;
+  gap:5px;
+  margin-top:6px;
+}
+
 button,a{
   border:none;
   padding:7px;
@@ -94,17 +127,8 @@ button,a{
 
 .download{background:#fff;color:#000;text-decoration:none}
 .delete{background:#222;color:red}
-
-.toast{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#fff;
-  color:#000;
-  padding:10px 14px;
-  border-radius:8px;
-  display:none;
-}
+.copy{background:#fff;color:#000}
+.save{background:#222;color:#fff}
 </style>
 </head>
 
@@ -113,11 +137,16 @@ button,a{
 <div class="app">
 
 <header>
-  <h1>Drive com Delay</h1>
+  <h1>Drive Completo</h1>
 
-  <div class="actionsTop">
-    <button class="btn" id="notif">🔔</button>
-    <button class="btn" id="add">+</button>
+  <div style="position:relative">
+    <button class="btn" id="plus">+</button>
+
+    <div class="menu" id="menu">
+      <button onclick="selectFile()">📁 Arquivo</button>
+      <button onclick="addText()">📝 Texto</button>
+    </div>
+
     <input type="file" id="file" multiple style="display:none">
   </div>
 </header>
@@ -125,8 +154,6 @@ button,a{
 <div class="grid" id="grid"></div>
 
 </div>
-
-<div class="toast" id="toast"></div>
 
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
@@ -141,13 +168,28 @@ const TABLE="arquivos";
 
 const grid=document.getElementById("grid");
 const fileInput=document.getElementById("file");
-const toast=document.getElementById("toast");
 
-document.getElementById("add").onclick=()=>fileInput.click();
+const menu=document.getElementById("menu");
+const plus=document.getElementById("plus");
+
+/* MENU TOGGLE */
+plus.onclick=()=>{
+  menu.style.display = menu.style.display==="flex" ? "none":"flex";
+};
+
+document.addEventListener("click",(e)=>{
+  if(!menu.contains(e.target) && e.target!==plus){
+    menu.style.display="none";
+  }
+});
 
 /* ======================
-   UPLOAD
+   ARQUIVOS
 ====================== */
+window.selectFile=()=>{
+  fileInput.click();
+};
+
 fileInput.onchange=async(e)=>{
 
   for(let file of e.target.files){
@@ -167,6 +209,7 @@ fileInput.onchange=async(e)=>{
       tipo:file.type,
       url:data.publicUrl,
       caminho:path,
+      tipo_item:"file",
       criado_em:new Date()
     });
   }
@@ -175,7 +218,26 @@ fileInput.onchange=async(e)=>{
 };
 
 /* ======================
-   LOAD COM DELAY
+   TEXTO
+====================== */
+window.addText=async()=>{
+
+  const text=prompt("Escreva seu texto:");
+
+  if(!text) return;
+
+  await supabase.from(TABLE).insert({
+    nome:"Texto",
+    tipo_item:"text",
+    content:text,
+    criado_em:new Date()
+  });
+
+  load();
+};
+
+/* ======================
+   LOAD
 ====================== */
 async function load(){
 
@@ -186,55 +248,76 @@ async function load(){
 
   grid.innerHTML="";
 
-  if(!data) return;
-
-  data.forEach((file,index)=>{
+  data.forEach((item,i)=>{
 
     const div=document.createElement("div");
     div.className="card";
+    div.style.animationDelay=`${i*60}ms`;
 
-    // 🔥 DELAY CRESCENTE
-    div.style.animationDelay = `${index * 80}ms`;
+    /* FILE */
+    if(item.tipo_item==="file"){
 
-    div.innerHTML=`
-      <div class="preview">
-        ${file.tipo?.startsWith("image/")
-          ? `<img src="${file.url}">`
-          : file.tipo?.startsWith("video/")
-          ? `<video src="${file.url}" controls></video>`
-          : "📄"}
-      </div>
+      div.innerHTML=`
+        <div class="preview">
+          ${item.tipo?.startsWith("image/")
+            ? `<img src="${item.url}">`
+            : item.tipo?.startsWith("video/")
+            ? `<video src="${item.url}" controls></video>`
+            : "📄"}
+        </div>
 
-      <div>${file.nome}</div>
+        <div>${item.nome}</div>
 
-      <a class="download" href="${file.url}" download>Baixar</a>
-      <button class="delete" onclick="del('${file.id}','${file.caminho}')">Excluir</button>
-    `;
+        <a class="download" href="${item.url}" download>Baixar</a>
+      `;
+    }
+
+    /* TEXT */
+    else{
+
+      div.innerHTML=`
+        <textarea id="t-${item.id}">${item.content}</textarea>
+
+        <div class="actions">
+          <button class="copy" onclick="copyText('${item.id}')">Copiar</button>
+          <button class="save" onclick="saveText('${item.id}')">Salvar</button>
+          <button class="delete" onclick="del('${item.id}')">Excluir</button>
+        </div>
+      `;
+    }
 
     grid.appendChild(div);
   });
 }
 
 /* ======================
-   DELETE
+   TEXT ACTIONS
 ====================== */
+window.copyText=(id)=>{
+  const t=document.getElementById("t-"+id);
+  navigator.clipboard.writeText(t.value);
+  alert("Copiado!");
+};
+
+window.saveText=async(id)=>{
+  const t=document.getElementById("t-"+id);
+
+  await supabase
+  .from(TABLE)
+  .update({content:t.value})
+  .eq("id",id);
+};
+
 window.del=async(id,path)=>{
 
-  await supabase.storage.from(BUCKET).remove([path]);
+  if(path){
+    await supabase.storage.from(BUCKET).remove([path]);
+  }
+
   await supabase.from(TABLE).delete().eq("id",id);
 
   load();
 };
-
-/* ======================
-   NOTIFICAÇÃO SIMPLES
-====================== */
-function toastMsg(msg){
-  toast.innerText=msg;
-  toast.style.display="block";
-
-  setTimeout(()=>toast.style.display="none",2000);
-}
 
 load();
 </script>
