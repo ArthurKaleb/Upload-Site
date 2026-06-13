@@ -20,6 +20,22 @@ body {
   overflow: hidden;
 }
 
+/* Customização global das barras de rolagem para o modo escuro */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b; 
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46; 
+}
+
 /* ==========================================================================
    SIDEBAR (Menu Lateral)
    ========================================================================== */
@@ -225,7 +241,26 @@ h1 {
   gap: 8px;
   max-height: 150px;
   overflow-y: auto;
+  padding-right: 4px;
 }
+
+/* Estilização da barra de rolagem específica das Tarefas */
+.todo-list::-webkit-scrollbar {
+  width: 6px;
+}
+.todo-list::-webkit-scrollbar-track {
+  background: #18181b; 
+  border-radius: 3px;
+}
+.todo-list::-webkit-scrollbar-thumb {
+  background: #09090b; 
+  border-radius: 3px;
+  border: 1px solid #27272a;
+}
+.todo-list::-webkit-scrollbar-thumb:hover {
+  background: #27272a;
+}
+
 .todo-item {
   display: flex;
   align-items: center;
@@ -336,6 +371,19 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+/* Barra de rolagem escura para o Chat */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+.chat-messages::-webkit-scrollbar-track {
+  background: #18181b;
+}
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #09090b;
+  border-radius: 3px;
+  border: 1px solid #27272a;
 }
 
 .chat-bubble {
@@ -787,11 +835,11 @@ h1 {
       </div>
 
       <div class="chat-messages" id="chat-messages-box">
-        <div class="chat-bubble assistant">Olá Kaleb! Sua API Key já foi aplicada com sucesso no código. Pode me perguntar qualquer coisa! Como posso te ajudar hoje?</div>
+        <div class="chat-bubble assistant">Olá Kaleb! Sou seu assistente de IA. Pronto para criarmos artes iradas ou montarmos aquele plano de estudos esperto para o 9º ano? Me diga o que precisamos fazer hoje!</div>
       </div>
 
       <div class="chat-input-area">
-        <input type="text" id="chat-user-input" placeholder="Digite sua mensagem para o Gemini... (Pressione Enter)">
+        <input type="text" id="chat-user-input" placeholder="Peça um plano de estudos ou tire suas dúvidas...">
         <button class="btn-pomo btn-primary" style="font-size:13px; padding:0 20px;" onclick="sendMessageToIA()">Enviar</button>
       </div>
     </div>
@@ -960,7 +1008,7 @@ h1 {
     if(e.key === 'Enter') addTodo();
   });
 
-  // --- LÓGICA DO CHAT (CONEXÃO GOOGLE GEMINI COM CHAVE EMBUTIDA) ---
+  // --- LÓGICA DO CHAT DE IA (ATUALIZADO PARA O NOVO PADRÃO DE CHAVES BEARER TOKEN) ---
   const CHAVE_PADRAO = "AQ.Ab8RN6KOhwbn0k44gReOc736oz1L0WCO64gc39gjtvXj0oR0cw";
 
   function saveApiKey(key) {
@@ -968,7 +1016,6 @@ h1 {
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    // Se não houver chave salva no navegador, define a chave padrão que você enviou
     let savedKey = localStorage.getItem('gemini_api_key');
     if(!savedKey) {
       savedKey = CHAVE_PADRAO;
@@ -981,11 +1028,11 @@ h1 {
     const inputElement = document.getElementById('chat-user-input');
     const messagesBox = document.getElementById('chat-messages-box');
     const apiKey = localStorage.getItem('gemini_api_key') || CHAVE_PADRAO;
-    const userText = inputElement.value.trim();
+    let userText = inputElement.value.trim();
 
     if (!userText) return;
 
-    // Adiciona pergunta do usuário na interface
+    // Adiciona a pergunta do usuário na interface
     const userBubble = document.createElement('div');
     userBubble.className = 'chat-bubble user';
     userBubble.textContent = userText;
@@ -997,23 +1044,29 @@ h1 {
     // Coloca balão de carregamento provisório
     const loadingBubble = document.createElement('div');
     loadingBubble.className = 'chat-bubble assistant';
-    loadingBubble.innerHTML = '<em>Gemini está pensando...</em>';
+    loadingBubble.innerHTML = '<em>Gemini está processando...</em>';
     messagesBox.appendChild(loadingBubble);
     messagesBox.scrollTop = messagesBox.scrollHeight;
 
+    // Engenharia de prompt embutida discreta para ajudar o Kaleb (estudos + design)
+    let promptModificado = userText;
+    if (userText.toLowerCase().includes('estudo') || userText.toLowerCase().includes('plano')) {
+      promptModificado = `Aja como um mentor acadêmico moderno para o Kaleb, um estudante de 14 anos do 9º ano que também trabalha com design gráfico. Monte um cronograma/plano focado e direto ao ponto, intercalando matérias escolares com práticas de UI/UX ou artes visuais. Responda em português de forma clara e limpa, usando marcadores para facilitar a leitura. Solicitação dele: ${userText}`;
+    }
+
     try {
-      // Endpoint ajustado para o novo padrão de chaves de autenticação (AQ.)
+      // Ajustado para o novo padrão de cabeçalho do Google Cloud/Studio para chaves "AQ."
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`;
 
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}` // Passando a chave AQ. no Header de Autorização
+          'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           contents: [{
-            parts: [{ text: userText }]
+            parts: [{ text: promptModificado }]
           }]
         })
       });
