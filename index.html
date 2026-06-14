@@ -1045,6 +1045,11 @@
     </head>
 
     <body>
+        <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/upload-site/service-worker.js");
+        }
+        </script>
 
         <button class="mobile-menu-btn" onclick="toggleMenu()">
             <img src="op.png" alt="Menu">
@@ -1230,6 +1235,42 @@
         // Exibe a opacidade do corpo do site após carregar o layout
         window.addEventListener('DOMContentLoaded', () => {
             document.body.style.opacity = '1';
+        });
+
+        // ==========================================================================
+        // FUNÇÃO BOAS-VINDAS DO JARVIS (REPRODUÇÃO DE ÁUDIO MP3)
+        // ==========================================================================
+        function darBoasVindasJarvis() {
+            // Lista com os nomes dos seus arquivos de áudio
+            const audios = [
+                "bemvindo1.mp3",
+                "bemvindo2.mp3",
+                "bemvindo3.mp3"
+            ];
+            
+            // Sorteia um dos arquivos da lista
+            const audioSorteado = audios[Math.floor(Math.random() * audios.length)];
+            
+            // Cria o player de áudio e inicia a reprodução
+            const som = new Audio(audioSorteado);
+            som.volume = 0.85; // Ajuste o volume de 0 a 1 (0.85 é 85%)
+            
+            som.play().catch(error => {
+                console.log("A reprodução automática foi bloqueada ou o arquivo não foi encontrado:", error);
+            });
+        }
+
+        // Executa a função assim que a animação de entrada do site terminar
+        window.addEventListener('DOMContentLoaded', () => {
+            // Um pequeno atraso de 1.5 segundos para a música/animação visual entrar primeiro
+            setTimeout(darBoasVindasJarvis, 1500); 
+        });
+
+        // Versão alternativa anti-bloqueio dos navegadores:
+        window.addEventListener('click', function inicializarJarvis() {
+            darBoasVindasJarvis();
+            // Remove o evento depois que falou a primeira vez para não repetir a cada clique
+            window.removeEventListener('click', inicializarJarvis); 
         });
 
         // Função para abrir e fechar o menu mobile
@@ -1828,12 +1869,6 @@
         };
 
         load();
-        </script>
-
-        <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/upload-site/service-worker.js");
-        }
         </script>
     </body>
 </html>
