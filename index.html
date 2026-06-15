@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>K.O.S.A — Personal OS</title>
+        <title>K.O.S.A by Kaleb</title>
         <meta name="theme-color" content="#050505"/>
         <meta http-equiv="Permissions-Policy" content="microphone=(self)"/>
         <style>
@@ -832,39 +832,72 @@
         #confirm-modal .modal-box{max-width:380px;}
         .confirm-question{font-size:14px;color:var(--text);margin-bottom:6px;}
         .confirm-sub{font-size:12px;color:var(--muted);}
-
-        /* ================================================================
-            RESPONSIVE — MOBILE
-        ================================================================ */
-        @media(max-width:768px){
-            .mobile-top-bar{display:flex;}
-            .sidebar{
-            position:fixed;top:0;left:-100%;bottom:0;
-            width:260px;height:100dvh;
-            background:rgba(13,13,16,0.97);backdrop-filter:blur(14px);
-            padding-top:16px;
-            transition:left 0.3s cubic-bezier(0.16,1,0.3,1);
-            z-index:9100;overflow-y:auto;
+        
+        /* ==========================================================================
+        KOSA V2 — MOBILE RESPONSIVE PATCH (ANTI-QUEBRA)
+        ========================================================================== */
+        @media (max-width: 768px) {
+            /* 1. Transforma o layout horizontal em empilhamento vertical */
+            body {
+                flex-direction: column !important;
+                overflow-x: hidden !important;
+                overflow-y: auto !important; /* Permite rolar o ecra no telemovel */
+                height: auto !important;
+                min-height: 100dvh !important;
             }
-            .sidebar.open{left:0;}
-            .sidebar-overlay.show{display:block;}
-            .main-content{padding-top:54px;}
-            .page{padding:18px 16px;}
-            .page-header h1{font-size:22px;}
-            .dash-grid{grid-template-columns:1fr;}
-            .study-layout{grid-template-columns:1fr;}
-            .notes-grid{grid-template-columns:1fr;}
-            .drive-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
-            .calendar-grid{gap:1px;}
-            .calendar-day{min-height:52px;padding:4px;}
-            .clock-display{font-size:22px;}
-            .kosa-hud{width:150px;height:150px;}
-            .kosa-core{width:80px;height:80px;font-size:13px;}
-            .pomo-time{font-size:40px;}
-        }
 
-        @media(min-width:769px){
-            .mobile-top-bar,.sidebar-overlay{display:none!important;}
+            /* 2. Força sidebars e painéis principais a ocuparem 100% da largura */
+            .sidebar, aside, #sidebar, .kosa-sidebar, 
+            .main-content, main, #main-wrapper, .panel {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+                min-height: auto !important;
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 3. Colapsa qualquer Grid (Grelha) de duas ou mais colunas em apenas uma */
+            .grid, .dashboard-grid, [class*="grid"] {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+                padding: 8px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 4. Evita que os cards de arquivos ou notas transbordem da tela */
+            .card, .box, .note-card, .file-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* 5. Garante que textos longos quebrem a linha em vez de empurrar o layout */
+            .card-title, .card-text, .preview-text, .text, p, h1, h2, h3 {
+                white-space: pre-wrap !important;
+                word-break: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+
+            /* 6. Ajusta o HUD do KOSA e inputs de comandos para não sumirem no mobile */
+            .kosa-hud, #kosa-hud {
+                width: calc(100% - 24px) !important;
+                margin: 12px auto !important;
+                position: sticky !important;
+                bottom: 12px !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 9999 !important;
+            }
+
+            /* 7. Melhora o espaçamento de inputs e botões para o toque do dedo */
+            input, button, .btn {
+                min-height: 48px !important; /* Tamanho ideal para cliques mobile */
+                font-size: 16px !important;  /* Evita o zoom automatico do iOS Safari */
+            }
         }
         </style>
     </head>
