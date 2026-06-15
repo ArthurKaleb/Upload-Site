@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>K.O.S.A by Kaleb</title>
+        <title>K.O.S.A — Personal OS</title>
         <meta name="theme-color" content="#050505"/>
         <meta http-equiv="Permissions-Policy" content="microphone=(self)"/>
         <style>
@@ -832,7 +832,40 @@
         #confirm-modal .modal-box{max-width:380px;}
         .confirm-question{font-size:14px;color:var(--text);margin-bottom:6px;}
         .confirm-sub{font-size:12px;color:var(--muted);}
-        
+
+        /* ================================================================
+            RESPONSIVE — MOBILE
+        ================================================================ */
+        @media(max-width:768px){
+            .mobile-top-bar{display:flex;}
+            .sidebar{
+            position:fixed;top:0;left:-100%;bottom:0;
+            width:260px;height:100dvh;
+            background:rgba(13,13,16,0.97);backdrop-filter:blur(14px);
+            padding-top:16px;
+            transition:left 0.3s cubic-bezier(0.16,1,0.3,1);
+            z-index:9100;overflow-y:auto;
+            }
+            .sidebar.open{left:0;}
+            .sidebar-overlay.show{display:block;}
+            .main-content{padding-top:54px;}
+            .page{padding:18px 16px;}
+            .page-header h1{font-size:22px;}
+            .dash-grid{grid-template-columns:1fr;}
+            .study-layout{grid-template-columns:1fr;}
+            .notes-grid{grid-template-columns:1fr;}
+            .drive-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+            .calendar-grid{gap:1px;}
+            .calendar-day{min-height:52px;padding:4px;}
+            .clock-display{font-size:22px;}
+            .kosa-hud{width:150px;height:150px;}
+            .kosa-core{width:80px;height:80px;font-size:13px;}
+            .pomo-time{font-size:40px;}
+        }
+
+        @media(min-width:769px){
+            .mobile-top-bar,.sidebar-overlay{display:none!important;}
+        }
         /* ==========================================================================
         KOSA V2 — MOBILE RESPONSIVE PATCH (ANTI-QUEBRA)
         ========================================================================== */
