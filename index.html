@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>K.O.S.A — Personal OS</title>
-        <meta name="theme-color" content="#050505"/>
-        <meta http-equiv="Permissions-Policy" content="microphone=(self)"/>
-        <style>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kaleb Organization — OS</title>
+<meta content="#050505" name="theme-color"/>
+
+<style>
         /* ======================================================================
-            KOSA v2 — Design System
+            Kaleb Organization — Design System
             NASA mission control + Iron Man HUD + Apple premium OS + cyberpunk minimal
             Base: #050505 | Accent: white & grayscale | Pure monochrome
         ====================================================================== */
@@ -331,96 +332,6 @@
         .rf-date{font-size:11px;color:var(--muted);flex-shrink:0;}
 
         /* ================================================================
-            KOSA AI
-        ================================================================ */
-        .kosa-layout{display:flex;flex-direction:column;height:calc(100dvh - 80px);gap:0;}
-        .kosa-hud-section{
-            display:flex;flex-direction:column;align-items:center;
-            padding:24px 0;gap:16px;
-        }
-
-        .kosa-hud{
-            position:relative;width:180px;height:180px;
-            display:flex;align-items:center;justify-content:center;
-            cursor:pointer;user-select:none;
-        }
-        .kosa-ring{position:absolute;border-radius:50%;transition:all 0.4s ease;}
-        .ring-1{inset:0;border:1.5px dashed rgba(255,255,255,0.25);animation:spinCW 14s linear infinite;}
-        .ring-2{inset:16px;border:1.5px solid transparent;border-top-color:rgba(255,255,255,0.6);border-bottom-color:rgba(255,255,255,0.6);animation:spinCCW 9s linear infinite;}
-        .ring-3{inset:32px;border:1px dotted rgba(255,255,255,0.2);animation:spinCW 5s linear infinite;}
-        @keyframes spinCW{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-        @keyframes spinCCW{from{transform:rotate(360deg)}to{transform:rotate(0)}}
-
-        .kosa-core{
-            width:96px;height:96px;border-radius:50%;
-            background:var(--panel);border:2px solid var(--border2);
-            color:var(--muted);
-            display:flex;align-items:center;justify-content:center;
-            font-size:16px;font-weight:800;letter-spacing:3px;
-            transition:all 0.4s cubic-bezier(0.16,1,0.3,1);z-index:2;
-        }
-
-        .kosa-hud.listening .ring-1{border-color:rgba(255,255,255,0.8);animation-duration:4s;}
-        .kosa-hud.listening .ring-2{border-top-color:var(--cyan);border-bottom-color:var(--cyan);animation-duration:2.5s;}
-        .kosa-hud.listening .ring-3{border-color:rgba(255,255,255,0.5);animation-duration:2s;}
-        .kosa-hud.listening .kosa-core{background:var(--cyan);color:#000;border-color:var(--cyan);box-shadow:var(--glow-c);animation:corePulse 1.2s infinite ease-in-out;}
-        .kosa-hud.speaking .kosa-core{background:var(--panel);color:var(--cyan);border-color:var(--cyan);box-shadow:var(--glow-c);animation:coreSpeak 0.4s infinite alternate ease-in-out;}
-        .kosa-hud.thinking .kosa-core{border-color:var(--blue);color:var(--blue);animation:coreSpin 1.5s linear infinite;}
-
-        @keyframes corePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06);box-shadow:0 0 32px rgba(255,255,255,0.8)}}
-        @keyframes coreSpeak{from{transform:scale(0.94)}to{transform:scale(1.06)}}
-        @keyframes coreSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
-        .kosa-state-label{
-            font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;
-            font-family:var(--mono);
-        }
-
-        .kosa-controls{display:flex;gap:8px;}
-
-        .kosa-transcript{
-            min-height:28px;max-width:600px;width:100%;
-            text-align:center;font-size:15px;color:var(--text);
-            font-style:italic;color:var(--soft);padding:4px 0;
-        }
-
-        .kosa-conversation{
-            flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;
-            padding:16px 0;border-top:1px solid var(--border);
-            margin-top:8px;
-        }
-
-        .kosa-msg{display:flex;gap:10px;align-items:flex-start;}
-        .kosa-msg.user{flex-direction:row-reverse;}
-        .kosa-msg-avatar{
-            width:28px;height:28px;border-radius:50%;flex-shrink:0;
-            display:flex;align-items:center;justify-content:center;
-            font-size:11px;font-weight:700;
-        }
-        .kosa-msg.user .kosa-msg-avatar{background:var(--blue);color:#fff;}
-        .kosa-msg.assistant .kosa-msg-avatar{background:var(--cyan);color:#000;}
-
-        .kosa-msg-bubble{
-            max-width:75%;padding:10px 14px;border-radius:12px;
-            font-size:13.5px;line-height:1.55;
-        }
-        .kosa-msg.user .kosa-msg-bubble{
-            background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
-            color:var(--text);border-radius:12px 2px 12px 12px;
-        }
-        .kosa-msg.assistant .kosa-msg-bubble{
-            background:var(--panel);border:1px solid var(--border);
-            color:var(--text);border-radius:2px 12px 12px 12px;
-        }
-        .kosa-msg-time{font-size:10px;color:var(--muted);margin-top:4px;}
-
-        .kosa-input-bar{
-            display:flex;gap:8px;padding:16px 0 4px;
-            border-top:1px solid var(--border);
-        }
-        .kosa-input-bar .input{flex:1;}
-
-        /* ================================================================
             MINI DRIVE
         ================================================================ */
         .drive-toolbar{
@@ -576,9 +487,12 @@
 
         .empty-state{
             text-align:center;padding:48px 24px;
+            display: flex;
+            flex-direction: column;
             color:var(--muted);
+            align-items: center;
         }
-        .empty-state-icon{margin-bottom:16px;opacity:0.4;display:flex;justify-content:center;}
+        .empty-state-icon{margin-bottom:16px;opacity:0.4;display:flex;justify-content:center; width: 8vh;}
         .empty-state-title{font-size:15px;color:var(--soft);margin-bottom:6px;}
 
         /* ================================================================
@@ -659,23 +573,6 @@
         .event-time{font-size:12px;color:var(--muted);}
 
         /* ================================================================
-            STUDIES
-        ================================================================ */
-        .study-layout{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-        .study-input-panel{display:flex;flex-direction:column;gap:12px;}
-        .study-result-panel{
-            background:var(--panel);border:1px solid var(--border);
-            border-radius:var(--radius);padding:20px;
-            overflow-y:auto;max-height:500px;
-        }
-        .study-result-content{
-            font-size:13.5px;color:var(--text);line-height:1.7;
-            white-space:pre-wrap;
-        }
-
-        .study-actions{display:flex;flex-wrap:wrap;gap:8px;}
-
-        /* ================================================================
             POMODORO
         ================================================================ */
         .pomo-center{
@@ -702,7 +599,6 @@
             stroke-linecap:round;
             stroke-dasharray:628;stroke-dashoffset:0;
             transition:stroke-dashoffset 1s linear;
-            filter:drop-shadow(0 0 6px rgba(255,255,255,0.5));
         }
         .pomo-center-content{
             position:absolute;inset:0;display:flex;flex-direction:column;
@@ -778,19 +674,6 @@
         .status-badge.unknown .dot{background:var(--muted);}
 
         /* ================================================================
-            COMMANDS
-        ================================================================ */
-        .commands-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
-        .command-card{
-            background:var(--panel);border:1px solid var(--border);
-            border-radius:var(--radius);padding:14px 16px;
-            cursor:pointer;transition:var(--transition);
-        }
-        .command-card:hover{border-color:var(--cyan);background:rgba(255,255,255,0.04);}
-        .command-text{font-size:13px;color:var(--text);font-family:var(--mono);}
-        .command-cat{font-size:11px;color:var(--muted);margin-top:4px;}
-
-        /* ================================================================
             GLOBAL SEARCH
         ================================================================ */
         #global-search-modal .modal-box{max-width:640px;}
@@ -858,8 +741,6 @@
             .calendar-grid{gap:1px;}
             .calendar-day{min-height:52px;padding:4px;}
             .clock-display{font-size:22px;}
-            .kosa-hud{width:150px;height:150px;}
-            .kosa-core{width:80px;height:80px;font-size:13px;}
             .pomo-time{font-size:40px;}
         }
 
@@ -949,8 +830,7 @@
 
             .dash-grid,
             .notes-grid,
-            .study-layout,
-            .commands-grid {
+            .study-layout {
                 grid-template-columns: 1fr !important;
                 gap: 12px;
             }
@@ -998,32 +878,6 @@
                 min-height: 44px;
             }
 
-            .kosa-layout {
-                height: calc(100dvh - 72px);
-            }
-
-            .kosa-hud {
-                width: 150px !important;
-                height: 150px !important;
-                position: relative !important;
-                margin: 0 auto !important;
-                bottom: auto !important;
-            }
-
-            .kosa-core {
-                width: 80px;
-                height: 80px;
-                font-size: 13px;
-            }
-
-            .kosa-msg-bubble {
-                max-width: 86%;
-            }
-
-            .kosa-input-bar {
-                gap: 8px;
-            }
-
             .calendar-grid {
                 gap: 1px;
             }
@@ -1052,672 +906,459 @@
             }
         }
         </style>
-    </head>
-    <body>
-
-        <!-- Mobile top bar -->
-        <div class="mobile-top-bar">
-        <button class="mobile-menu-btn" onclick="K.toggleMobileMenu()" aria-label="Menu">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg>
-        </button>
-        <span class="mobile-title">K.O.S.A</span>
-        </div>
-
-        <div class="sidebar-overlay" id="sidebar-overlay" onclick="K.toggleMobileMenu()"></div>
-
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <div class="logo-hud"><img src="kosa.png" alt="KOSA"/></div>
-            <div>
-            <div class="logo-text">K.O.S.A</div>
-            <div class="logo-sub">kaleb organization</div>
-            </div>
-        </div>
-
-        <span class="nav-section-label">Sistema</span>
-        <button class="nav-item active" onclick="K.nav('home',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+</head>
+<body>
+<!-- Mobile top bar -->
+<div class="mobile-top-bar">
+<button aria-label="Menu" class="mobile-menu-btn" onclick="App.toggleMobileMenu()">
+<svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22"><line x1="3" x2="21" y1="8" y2="8"></line><line x1="3" x2="21" y1="16" y2="16"></line></svg>
+</button>
+<span class="mobile-title">Kaleb Organization</span>
+</div>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="App.toggleMobileMenu()"></div>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-logo">
+<div class="logo-hud">KO</div>
+<div>
+<div class="logo-text">Kaleb Painel</div>
+<div class="logo-sub">personal os</div>
+</div>
+</div>
+<span class="nav-section-label">Sistema</span>
+<button class="nav-item active" onclick="App.nav('home',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             Início
         </button>
-        <button class="nav-item" onclick="K.nav('kosa',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg>
-            KOSA
-        </button>
-
-        <span class="nav-section-label">Produtividade</span>
-        <button class="nav-item" onclick="K.nav('tasks',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+<span class="nav-section-label">Produtividade</span>
+<button class="nav-item" onclick="App.nav('tasks',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
             Tarefas
             <span class="nav-badge" id="tasks-badge" style="display:none">0</span>
-        </button>
-        <button class="nav-item" onclick="K.nav('notes',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+</button>
+<button class="nav-item" onclick="App.nav('notes',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
             Notas
         </button>
-        <button class="nav-item" onclick="K.nav('agenda',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+<button class="nav-item" onclick="App.nav('agenda',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
             Agenda
         </button>
-        <button class="nav-item" onclick="K.nav('pomodoro',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+<button class="nav-item" onclick="App.nav('pomodoro',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             Pomodoro
         </button>
-
-        <span class="nav-section-label">Conteúdo</span>
-        <button class="nav-item" onclick="K.nav('drive',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+<span class="nav-section-label">Conteúdo</span>
+<button class="nav-item" onclick="App.nav('drive',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
             Mini Drive
         </button>
-        <button class="nav-item" onclick="K.nav('studies',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-            Estudos
-        </button>
-        <button class="nav-item" onclick="K.nav('commands',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-            Comandos
-        </button>
-        <button class="nav-item" onclick="K.nav('settings',this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+
+
+<button class="nav-item" onclick="App.nav('settings',this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             Configurações
         </button>
-
-        <div class="sidebar-footer">
-            <div class="sys-status" id="sys-status">
-            <div class="sys-status-row"><div class="status-dot off" id="dot-gemini"></div><span>Gemini</span></div>
-            <div class="sys-status-row"><div class="status-dot off" id="dot-supabase"></div><span>Supabase</span></div>
-            <div class="sys-status-row"><div class="status-dot off" id="dot-mic"></div><span>Microfone</span></div>
-            <div class="sys-status-row"><div class="status-dot off" id="dot-net"></div><span>Rede</span></div>
-            </div>
-        </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content" id="main-content">
-
-        <!-- ================================================================
+</aside>
+<!-- Main Content -->
+<main class="main-content" id="main-content">
+<!-- ================================================================
             HOME PAGE
         ================================================================ -->
-        <div class="page active" id="page-home">
-        <div class="greeting-bar">
-            <div>
-            <h1 class="greeting-text" id="greeting-text">Bom dia</h1>
-            <div class="greeting-sub" id="greeting-sub">Carregando...</div>
-            </div>
-            <div class="clock-display" id="clock-display">--:--</div>
-        </div>
+<div class="page active" id="page-home">
+<div class="greeting-bar">
+<div>
+<h1 class="greeting-text" id="greeting-text">Bom dia</h1>
+<div class="greeting-sub" id="greeting-sub">Carregando...</div>
+</div>
+<div class="clock-display" id="clock-display">--:--</div>
+</div>
 
-        <div class="system-ribbon" id="system-ribbon">
-            <div class="ribbon-chip"><div class="rc-dot" id="rc-gemini" style="background:var(--muted)"></div>Gemini</div>
-            <div class="ribbon-chip"><div class="rc-dot" id="rc-supabase" style="background:var(--muted)"></div>Supabase</div>
-            <div class="ribbon-chip"><div class="rc-dot" id="rc-kosa" style="background:var(--muted)"></div>KOSA</div>
-            <div class="ribbon-chip" id="rc-date"></div>
-        </div>
 
-        <div class="quick-command-bar">
-            <input class="input" id="home-command-input" placeholder="Diga algo ao KOSA... ex: 'crie uma tarefa para estudar'" />
-            <button class="btn btn-primary" onclick="K.homeCommand()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Enviar
-            </button>
-        </div>
-
-        <div class="dash-grid">
-            <div class="stat-card">
-            <div class="stat-card-label">Tarefas Pendentes</div>
-            <div class="stat-card-value" id="home-tasks-count">0</div>
-            <div class="stat-card-sub" id="home-urgent-count">0 urgentes</div>
-            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-                <button class="btn btn-sm btn-ghost" onclick="K.nav('tasks',null)">Ver Todas</button>
-                <button class="btn btn-sm btn-primary" onclick="K.openTaskModal()">+ Nova</button>
-            </div>
-            </div>
-
-            <div class="stat-card">
-            <div class="stat-card-label">Pomodoro Hoje</div>
-            <div class="stat-card-value" id="home-pomo-count">0</div>
-            <div class="stat-card-sub">sessões concluídas</div>
-            <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
-                <button class="btn btn-sm btn-ghost" onclick="K.nav('pomodoro',null)">Ver Timer</button>
-                <button class="btn btn-sm btn-primary" onclick="K.startPomodoro()">Iniciar Foco</button>
-            </div>
-            </div>
-
-            <div class="stat-card">
-            <div class="stat-card-label">Próximo Evento</div>
-            <div id="home-next-event" style="font-size:14px;color:var(--text);margin:10px 0;line-height:1.4;">Nenhum evento próximo</div>
-            <button class="btn btn-sm btn-ghost" onclick="K.openEventModal()">+ Novo Evento</button>
-            </div>
-
-            <div class="stat-card" style="grid-row:span 2;">
-            <div class="stat-card-label">Arquivos Recentes</div>
-            <div class="recent-files-list" id="home-recent-files">
-                <div style="color:var(--muted);font-size:13px;">Carregando...</div>
-            </div>
-            </div>
-
-            <div class="card" style="grid-column:span 2;">
-            <div class="card-title">Ações Rápidas</div>
-            <div class="action-grid">
-                <button class="btn btn-ghost" onclick="K.openTaskModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Nova Tarefa</button>
-                <button class="btn btn-ghost" onclick="K.openNoteModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Nova Nota</button>
-                <button class="btn btn-ghost" onclick="K.openEventModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Novo Evento</button>
-                <button class="btn btn-ghost" onclick="K.nav('kosa',null)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16v-2M16 16v-2"/></svg> Abrir KOSA</button>
-                <button class="btn btn-ghost" onclick="K.startPomodoro()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg> Iniciar Foco</button>
-                <button class="btn btn-ghost" onclick="K.nav('drive',null)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Mini Drive</button>
-                <button class="btn btn-ghost" onclick="K.planDay()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M8 18h2M14 14h2M14 18h2"/></svg> Planejar Dia</button>
-                <button class="btn btn-ghost" onclick="K.openGlobalSearch()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Buscar</button>
-            </div>
-            </div>
-        </div>
-        </div>
-
-        <!-- ================================================================
-            KOSA PAGE
-        ================================================================ -->
-        <div class="page" id="page-kosa">
-        <div class="page-header">
-            <div>
-            <h1>K.O.S.A</h1>
-            <div class="subtitle">Kinetic Operational Smart Assistant</div>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-ghost btn-sm" id="btn-voice-toggle" onclick="K.Voice.toggle()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg> Voz: On</button>
-            <button class="btn btn-ghost btn-sm" onclick="K.Voice.clearSpeech()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M23 9l-6 6M17 9l6 6"/></svg> Parar Fala</button>
-            <button class="btn btn-ghost btn-sm" onclick="K.clearConversation()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg> Limpar</button>
-            </div>
-        </div>
-
-        <div class="kosa-layout">
-            <div class="kosa-hud-section">
-            <div class="kosa-hud" id="kosa-hud" onclick="K.Voice.toggleListening()">
-                <div class="kosa-ring ring-1"></div>
-                <div class="kosa-ring ring-2"></div>
-                <div class="kosa-ring ring-3"></div>
-                <div class="kosa-core" id="kosa-core">KOSA</div>
-            </div>
-            <div class="kosa-state-label" id="kosa-state-label">idle</div>
-            <div class="kosa-transcript" id="kosa-transcript"></div>
-            <div class="kosa-controls">
-                <button class="btn btn-ghost btn-sm" id="btn-kosa-listen" onclick="K.Voice.toggleListening()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg> Ouvir</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Voice.clearSpeech()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="1"/></svg> Parar</button>
-            </div>
-            </div>
-
-            <div class="kosa-conversation" id="kosa-conversation"></div>
-
-            <div class="kosa-input-bar">
-            <input class="input" id="kosa-text-input" placeholder="Digite um comando ou pergunta..." />
-            <button class="btn btn-primary" onclick="K.sendTextCommand()">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            </button>
-            </div>
-        </div>
-        </div>
-
-        <!-- ================================================================
+<div class="dash-grid">
+<div class="stat-card">
+<div class="stat-card-label">Tarefas Pendentes</div>
+<div class="stat-card-value" id="home-tasks-count">0</div>
+<div class="stat-card-sub" id="home-urgent-count">0 urgentes</div>
+<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+<button class="btn btn-sm btn-ghost" onclick="App.nav('tasks',null)">Ver Todas</button>
+<button class="btn btn-sm btn-primary" onclick="App.openTaskModal()">+ Nova</button>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-card-label">Pomodoro Hoje</div>
+<div class="stat-card-value" id="home-pomo-count">0</div>
+<div class="stat-card-sub">sessões concluídas</div>
+<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+<button class="btn btn-sm btn-ghost" onclick="App.nav('pomodoro',null)">Ver Timer</button>
+<button class="btn btn-sm btn-primary" onclick="App.startPomodoro()">Iniciar Foco</button>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-card-label">Próximo Evento</div>
+<div id="home-next-event" style="font-size:14px;color:var(--text);margin:10px 0;line-height:1.4;">Nenhum evento próximo</div>
+<button class="btn btn-sm btn-ghost" onclick="App.openEventModal()">+ Novo Evento</button>
+</div>
+<div class="stat-card" style="grid-row:span 2;">
+<div class="stat-card-label">Arquivos Recentes</div>
+<div class="recent-files-list" id="home-recent-files">
+<div style="color:var(--muted);font-size:13px;">Carregando...</div>
+</div>
+</div>
+<div class="card" style="grid-column:span 2;">
+<div class="card-title">Ações Rápidas</div>
+<div class="action-grid">
+<button class="btn btn-ghost" onclick="App.openTaskModal()">Nova Tarefa</button>
+<button class="btn btn-ghost" onclick="App.openNoteModal()">Nova Nota</button>
+<button class="btn btn-ghost" onclick="App.openEventModal()">Novo Evento</button>
+<button class="btn btn-ghost" onclick="App.startPomodoro()">Iniciar Foco</button>
+<button class="btn btn-ghost" onclick="App.nav('drive',null)">Mini Drive</button>
+<button class="btn btn-ghost" onclick="App.openGlobalSearch()">Buscar</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ================================================================
             TASKS PAGE
         ================================================================ -->
-        <div class="page" id="page-tasks">
-        <div class="page-header">
-            <div>
-            <h1>Tarefas</h1>
-            <div class="subtitle">Gerencie seu fluxo de trabalho</div>
-            </div>
-            <button class="btn btn-primary" onclick="K.openTaskModal()">+ Nova Tarefa</button>
-        </div>
-
-        <div class="task-toolbar">
-            <div class="task-filters">
-            <button class="task-filter-btn active" onclick="K.Tasks.setFilter('all',this)">Todas</button>
-            <button class="task-filter-btn" onclick="K.Tasks.setFilter('pending',this)">Pendentes</button>
-            <button class="task-filter-btn" onclick="K.Tasks.setFilter('today',this)">Hoje</button>
-            <button class="task-filter-btn" onclick="K.Tasks.setFilter('overdue',this)">Atrasadas</button>
-            <button class="task-filter-btn" onclick="K.Tasks.setFilter('done',this)">Concluídas</button>
-            </div>
-            <input class="input" style="max-width:220px;" placeholder="Buscar tarefa..." oninput="K.Tasks.search(this.value)" />
-        </div>
-
-        <div class="task-list" id="task-list"></div>
-        </div>
-
-        <!-- ================================================================
+<div class="page" id="page-tasks">
+<div class="page-header">
+<div>
+<h1>Tarefas</h1>
+<div class="subtitle">Gerencie seu fluxo de trabalho</div>
+</div>
+<button class="btn btn-primary" onclick="App.openTaskModal()">+ Nova Tarefa</button>
+</div>
+<div class="task-toolbar">
+<div class="task-filters">
+<button class="task-filter-btn active" onclick="App.Tasks.setFilter('all',this)">Todas</button>
+<button class="task-filter-btn" onclick="App.Tasks.setFilter('pending',this)">Pendentes</button>
+<button class="task-filter-btn" onclick="App.Tasks.setFilter('today',this)">Hoje</button>
+<button class="task-filter-btn" onclick="App.Tasks.setFilter('overdue',this)">Atrasadas</button>
+<button class="task-filter-btn" onclick="App.Tasks.setFilter('done',this)">Concluídas</button>
+</div>
+<input class="input" oninput="App.Tasks.search(this.value)" placeholder="Buscar tarefa..." style="max-width:220px;"/>
+</div>
+<div class="task-list" id="task-list"></div>
+</div>
+<!-- ================================================================
             NOTES PAGE
         ================================================================ -->
-        <div class="page" id="page-notes">
-        <div class="page-header">
-            <div>
-            <h1>Notas</h1>
-            <div class="subtitle">Suas ideias organizadas</div>
-            </div>
-            <button class="btn btn-primary" onclick="K.openNoteModal()">+ Nova Nota</button>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
-            <input class="input" style="max-width:260px;" placeholder="Buscar notas..." oninput="K.Notes.search(this.value)" />
-            <button class="btn btn-ghost btn-sm" onclick="K.Notes.togglePin()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/><path d="M12 14v8"/></svg> Fixadas</button>
-        </div>
-
-        <div class="notes-grid" id="notes-grid"></div>
-        </div>
-
-        <!-- ================================================================
+<div class="page" id="page-notes">
+<div class="page-header">
+<div>
+<h1>Notas</h1>
+<div class="subtitle">Suas ideias organizadas</div>
+</div>
+<button class="btn btn-primary" onclick="App.openNoteModal()">+ Nova Nota</button>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+<input class="input" oninput="App.Notes.search(this.value)" placeholder="Buscar notas..." style="max-width:260px;"/>
+<button class="btn btn-ghost btn-sm" onclick="App.Notes.togglePin()"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"></path><path d="M12 14v8"></path></svg> Fixadas</button>
+</div>
+<div class="notes-grid" id="notes-grid"></div>
+</div>
+<!-- ================================================================
             AGENDA PAGE
         ================================================================ -->
-        <div class="page" id="page-agenda">
-        <div class="page-header">
-            <div>
-            <h1>Agenda</h1>
-            <div class="subtitle">Seus compromissos</div>
-            </div>
-            <button class="btn btn-primary" onclick="K.openEventModal()">+ Novo Evento</button>
-        </div>
-
-        <div class="calendar-header">
-            <button class="calendar-nav-btn" onclick="K.Cal.prevMonth()">‹ Anterior</button>
-            <div class="calendar-month-label" id="cal-month-label">Junho 2026</div>
-            <button class="calendar-nav-btn" onclick="K.Cal.nextMonth()">Próximo ›</button>
-        </div>
-
-        <div class="calendar-grid" id="calendar-grid"></div>
-
-        <div style="margin-bottom:12px;">
-            <h3 style="font-size:15px;color:var(--soft);font-weight:600;">Próximos Eventos</h3>
-        </div>
-        <div class="events-list" id="events-list"></div>
-        </div>
-
-        <!-- ================================================================
+<div class="page" id="page-agenda">
+<div class="page-header">
+<div>
+<h1>Agenda</h1>
+<div class="subtitle">Seus compromissos</div>
+</div>
+<button class="btn btn-primary" onclick="App.openEventModal()">+ Novo Evento</button>
+</div>
+<div class="calendar-header">
+<button class="calendar-nav-btn" onclick="App.Cal.prevMonth()">‹ Anterior</button>
+<div class="calendar-month-label" id="cal-month-label">Junho 2026</div>
+<button class="calendar-nav-btn" onclick="App.Cal.nextMonth()">Próximo ›</button>
+</div>
+<div class="calendar-grid" id="calendar-grid"></div>
+<div style="margin-bottom:12px;">
+<h3 style="font-size:15px;color:var(--soft);font-weight:600;">Próximos Eventos</h3>
+</div>
+<div class="events-list" id="events-list"></div>
+</div>
+<!-- ================================================================
             MINI DRIVE PAGE
         ================================================================ -->
-        <div class="page" id="page-drive">
-        <div class="page-header">
-            <div>
-            <h1>Mini Drive</h1>
-            <div class="subtitle">Arquivos e notas na nuvem</div>
-            </div>
-            <div style="display:flex;gap:8px;">
-            <button class="btn btn-ghost" onclick="document.getElementById('drive-file-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg> Upload</button>
-            <button class="btn btn-primary" onclick="K.Drive.openTextModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Novo Texto</button>
-            </div>
-        </div>
-
-        <div class="drive-drop-zone" id="drive-drop-zone">
-            <div style="margin-bottom:8px;display:flex;justify-content:center;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
-            <div style="font-size:14px;">Solte arquivos aqui para fazer upload</div>
-        </div>
-
-        <div class="drive-toolbar">
-            <input class="input drive-search" id="drive-search" placeholder="Buscar arquivos..." oninput="K.Drive.search(this.value)" />
-            <div class="drive-filter-group">
-            <button class="filter-chip active" onclick="K.Drive.setFilter('all',this)">Todos</button>
-            <button class="filter-chip" onclick="K.Drive.setFilter('image',this)">Imagens</button>
-            <button class="filter-chip" onclick="K.Drive.setFilter('text',this)">Textos</button>
-            <button class="filter-chip" onclick="K.Drive.setFilter('pdf',this)">PDF</button>
-            </div>
-        </div>
-
-        <div class="drive-grid" id="drive-grid"></div>
-        <input type="file" id="drive-file-input" multiple style="display:none"/>
-        </div>
-
-        <!-- ================================================================
+<div class="page" id="page-drive">
+<div class="page-header">
+<div>
+<h1>Mini Drive</h1>
+<div class="subtitle">Arquivos e notas na nuvem</div>
+</div>
+<div style="display:flex;gap:8px;">
+<button class="btn btn-ghost" onclick="document.getElementById('drive-file-input').click()"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="M17 8l-5-5-5 5M12 3v12"></path></svg> Upload</button>
+<button class="btn btn-primary" onclick="App.Drive.openTextModal()"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Novo Texto</button>
+</div>
+</div>
+<div class="drive-drop-zone" id="drive-drop-zone">
+<div style="margin-bottom:8px;display:flex;justify-content:center;"><svg fill="none" height="28" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="28"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
+<div style="font-size:14px;">Solte arquivos aqui para fazer upload</div>
+</div>
+<div class="drive-toolbar">
+<input class="input drive-search" id="drive-search" oninput="App.Drive.search(this.value)" placeholder="Buscar arquivos..."/>
+<div class="drive-filter-group">
+<button class="filter-chip active" onclick="App.Drive.setFilter('all',this)">Todos</button>
+<button class="filter-chip" onclick="App.Drive.setFilter('image',this)">Imagens</button>
+<button class="filter-chip" onclick="App.Drive.setFilter('text',this)">Textos</button>
+<button class="filter-chip" onclick="App.Drive.setFilter('pdf',this)">PDF</button>
+</div>
+</div>
+<div class="drive-grid" id="drive-grid"></div>
+<input id="drive-file-input" multiple="" style="display:none" type="file"/>
+</div>
+<!-- ================================================================
             STUDIES PAGE
         ================================================================ -->
-        <div class="page" id="page-studies">
-        <div class="page-header">
-            <div>
-            <h1>Estudos</h1>
-            <div class="subtitle">Ferramentas de IA para aprender mais rápido</div>
-            </div>
-        </div>
 
-        <div class="study-layout">
-            <div class="study-input-panel">
-            <textarea class="input" id="study-input" rows="10" placeholder="Cole seu texto, tema ou tópico aqui..."></textarea>
-            <div class="study-actions">
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('resumir')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg> Resumir</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('explicar')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 0 0-4-10z"/></svg> Explicar Simples</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('questoes')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg> Criar Questões</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('flashcards')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="16" height="12" rx="2"/><path d="M6 2h16v12"/></svg> Flashcards</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('plano')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M8 18h2M14 14h2M14 18h2"/></svg> Plano de Estudo</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('mapa')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/><path d="M12 7v6M12 13l-6 4M12 13l6 4"/></svg> Mapa Mental</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('checklist')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Checklist</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.run('melhorar')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2zM19 14l.7 2.1L22 17l-2.1.7L19 20l-.7-2.1L16 17l2.1-.7L19 14zM5 14l.7 2.1L8 17l-2.1.7L5 20l-.7-2.1L2 17l2.1-.7L5 14z"/></svg> Melhorar Texto</button>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:8px;">
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.saveAsNote()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg> Salvar como Nota</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Study.saveAsTasks()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Criar Tarefas</button>
-            </div>
-            </div>
-            <div class="study-result-panel">
-            <div class="card-title">Resultado da IA</div>
-            <div class="study-result-content" id="study-result">O resultado da análise aparecerá aqui...</div>
-            </div>
-        </div>
-        </div>
-
-        <!-- ================================================================
+<!-- ================================================================
             POMODORO PAGE
         ================================================================ -->
-        <div class="page" id="page-pomodoro">
-        <div class="page-header">
-            <div>
-            <h1>Foco & Pomodoro</h1>
-            <div class="subtitle">Gerencie seu tempo com precisão</div>
-            </div>
-        </div>
+<div class="page" id="page-pomodoro">
+<div class="page-header">
+<div>
+<h1>Foco &amp; Pomodoro</h1>
+<div class="subtitle">Gerencie seu tempo com precisão</div>
+</div>
+</div>
+<div class="pomo-center">
+<div class="pomo-mode-tabs">
+<button class="pomo-tab active" onclick="App.Pomo.setMode('focus',this)">Foco 25min</button>
+<button class="pomo-tab" onclick="App.Pomo.setMode('short',this)">Pausa 5min</button>
+<button class="pomo-tab" onclick="App.Pomo.setMode('long',this)">Pausa 15min</button>
+<button class="pomo-tab" onclick="App.Pomo.setMode('custom',this)">Personalizado</button>
+</div>
+<div class="pomo-ring-wrapper">
+<svg class="pomo-svg" viewbox="0 0 220 220">
+<circle class="pomo-track" cx="110" cy="110" r="100"></circle>
+<circle class="pomo-progress" cx="110" cy="110" id="pomo-progress" r="100"></circle>
+</svg>
+<div class="pomo-center-content">
+<div class="pomo-time" id="pomo-time">25:00</div>
+<div class="pomo-label" id="pomo-mode-label">Tempo de Foco</div>
+</div>
+</div>
+<div class="pomo-controls">
+<button class="pomo-btn reset" onclick="App.Pomo.reset()" title="Resetar"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M1 4v6h6"></path><path d="M3.51 15a9 9 0 1 0 .49-4.5"></path></svg></button>
+<button class="pomo-btn start" id="btn-pomo-main" onclick="App.Pomo.toggle()"><svg fill="currentColor" height="22" id="pomo-btn-icon" viewbox="0 0 24 24" width="22"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></button>
+<button class="pomo-btn reset" onclick="App.Pomo.skip()" title="Pular"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" x2="19" y1="5" y2="19"></line></svg></button>
+</div>
+<select class="input pomo-task-select" id="pomo-task-select">
+<option value="">— Nenhuma tarefa vinculada —</option>
+</select>
+<div style="width:100%;">
+<div class="card-title" style="margin-bottom:10px;">Histórico de Sessões</div>
+<div class="pomo-sessions-log" id="pomo-log"></div>
+</div>
+</div>
+</div>
 
-        <div class="pomo-center">
-            <div class="pomo-mode-tabs">
-            <button class="pomo-tab active" onclick="K.Pomo.setMode('focus',this)">Foco 25min</button>
-            <button class="pomo-tab" onclick="K.Pomo.setMode('short',this)">Pausa 5min</button>
-            <button class="pomo-tab" onclick="K.Pomo.setMode('long',this)">Pausa 15min</button>
-            <button class="pomo-tab" onclick="K.Pomo.setMode('custom',this)">Personalizado</button>
-            </div>
-
-            <div class="pomo-ring-wrapper">
-            <svg class="pomo-svg" viewBox="0 0 220 220">
-                <circle class="pomo-track" cx="110" cy="110" r="100"/>
-                <circle class="pomo-progress" id="pomo-progress" cx="110" cy="110" r="100"/>
-            </svg>
-            <div class="pomo-center-content">
-                <div class="pomo-time" id="pomo-time">25:00</div>
-                <div class="pomo-label" id="pomo-mode-label">Tempo de Foco</div>
-            </div>
-            </div>
-
-            <div class="pomo-controls">
-            <button class="pomo-btn reset" onclick="K.Pomo.reset()" title="Resetar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg></button>
-            <button class="pomo-btn start" id="btn-pomo-main" onclick="K.Pomo.toggle()"><svg id="pomo-btn-icon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-            <button class="pomo-btn reset" onclick="K.Pomo.skip()" title="Pular"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg></button>
-            </div>
-
-            <select class="input pomo-task-select" id="pomo-task-select">
-            <option value="">— Nenhuma tarefa vinculada —</option>
-            </select>
-
-            <div style="width:100%;">
-            <div class="card-title" style="margin-bottom:10px;">Histórico de Sessões</div>
-            <div class="pomo-sessions-log" id="pomo-log"></div>
-            </div>
-        </div>
-        </div>
-
-        <!-- ================================================================
-            COMMANDS PAGE
-        ================================================================ -->
-        <div class="page" id="page-commands">
-        <div class="page-header">
-            <div>
-            <h1>Comandos</h1>
-            <div class="subtitle">Fale ou escreva qualquer um destes comandos</div>
-            </div>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-bottom:24px;">
-            <input class="input" id="cmd-test-input" placeholder="Teste um comando aqui..." style="flex:1;" />
-            <button class="btn btn-primary" onclick="K.testCommand()">Executar</button>
-        </div>
-
-        <div class="commands-grid" id="commands-grid"></div>
-        </div>
-
-        <!-- ================================================================
+<!-- ================================================================
             SETTINGS PAGE
         ================================================================ -->
-        <div class="page" id="page-settings">
-        <div class="page-header">
-            <div>
-            <h1>Configurações</h1>
-            <div class="subtitle">Personalize o KOSA</div>
-            </div>
-        </div>
+<div class="page" id="page-settings">
+<div class="page-header">
+<div>
+<h1>Configurações</h1>
+<div class="subtitle">Personalize seu painel</div>
+</div>
+</div>
+<div class="settings-grid">
+<div class="settings-section">
+<h3>Perfil</h3>
+<div class="settings-row">
+<div><div class="settings-row-label">Nome do Usuário</div></div>
+<input class="input" id="cfg-username" placeholder="Seu nome" style="max-width:200px;"/>
+</div>
 
-        <div class="settings-grid">
-            <div class="settings-section">
-            <h3>Perfil</h3>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Nome do Usuário</div></div>
-                <input class="input" style="max-width:200px;" id="cfg-username" placeholder="Seu nome" />
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Nome do Assistente</div></div>
-                <input class="input" style="max-width:200px;" id="cfg-assistant-name" placeholder="KOSA" />
-            </div>
-            </div>
+</div>
+<div class="settings-section">
+<h3>Armazenamento</h3>
 
-            <div class="settings-section">
-            <h3>API</h3>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Chave Gemini</div><div class="settings-row-sub">Restrinja por domínio no Google AI Studio</div></div>
-                <input class="input" style="max-width:260px;" id="cfg-gemini-key" type="password" placeholder="AIza..." />
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">URL Supabase</div></div>
-                <input class="input" style="max-width:260px;" id="cfg-sb-url" placeholder="https://xxx.supabase.co" />
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Chave Supabase (anon)</div></div>
-                <input class="input" style="max-width:260px;" id="cfg-sb-key" type="password" placeholder="sb_publishable_..." />
-            </div>
-            <div class="settings-row">
-                <div></div>
-                <div style="display:flex;gap:8px;">
-                <button class="btn btn-ghost btn-sm" onclick="K.Settings.testGemini()" id="btn-test-gemini">Testar Gemini</button>
-                <button class="btn btn-ghost btn-sm" onclick="K.Settings.testSupabase()" id="btn-test-sb">Testar Supabase</button>
-                </div>
-            </div>
-            </div>
+<div class="settings-row">
+<div><div class="settings-row-label">URL Supabase</div></div>
+<input class="input" id="cfg-sb-url" placeholder="https://xxx.supabase.co" style="max-width:260px;"/>
+</div>
+<div class="settings-row">
+<div><div class="settings-row-label">Chave Supabase (anon)</div></div>
+<input class="input" id="cfg-sb-key" placeholder="sb_publishable_..." style="max-width:260px;" type="password"/>
+</div>
 
-            <div class="settings-section">
-            <h3>Voz</h3>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Voz Ativada</div></div>
-                <button class="toggle-switch on" id="toggle-voice" onclick="K.Settings.toggleOption('voiceEnabled',this)"></button>
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Velocidade da Voz</div></div>
-                <input type="range" min="0.5" max="2" step="0.1" value="1" id="cfg-voice-rate" style="width:120px;" oninput="K.Settings.setVoiceRate(this.value)"/>
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Tom da Voz</div></div>
-                <input type="range" min="0.5" max="2" step="0.1" value="1" id="cfg-voice-pitch" style="width:120px;" oninput="K.Settings.setVoicePitch(this.value)"/>
-            </div>
-            </div>
+</div>
 
-            <div class="settings-section">
-            <h3>Status do Sistema</h3>
-            <div class="settings-row">
-                <div class="settings-row-label">Gemini AI</div>
-                <div class="status-badge unknown" id="sb-gemini"><div class="dot"></div>Verificando</div>
-            </div>
-            <div class="settings-row">
-                <div class="settings-row-label">Supabase</div>
-                <div class="status-badge unknown" id="sb-supabase"><div class="dot"></div>Verificando</div>
-            </div>
-            <div class="settings-row">
-                <div class="settings-row-label">Microfone</div>
-                <div class="status-badge unknown" id="sb-mic"><div class="dot"></div>Verificando</div>
-            </div>
-            <div class="settings-row">
-                <div class="settings-row-label">Rede</div>
-                <div class="status-badge unknown" id="sb-net"><div class="dot"></div>Verificando</div>
-            </div>
-            </div>
+<div class="settings-section">
+<h3>Status</h3>
 
-            <div class="settings-section">
-            <h3>Dados</h3>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Exportar Backup</div></div>
-                <button class="btn btn-ghost btn-sm" onclick="K.Settings.exportBackup()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar JSON</button>
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Importar Backup</div></div>
-                <button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file-input').click()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Importar JSON</button>
-            </div>
-            <div class="settings-row">
-                <div><div class="settings-row-label">Limpar Dados Locais</div></div>
-                <button class="btn btn-danger btn-sm" onclick="K.Settings.clearLocal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Limpar</button>
-            </div>
-            <input type="file" id="import-file-input" accept=".json" style="display:none" onchange="K.Settings.importBackup(this)"/>
-            </div>
+<div class="settings-row">
+<div class="settings-row-label">Supabase</div>
+<div class="status-badge unknown" id="sb-supabase"><div class="dot"></div>Verificando</div>
+</div>
 
-            <div style="display:flex;justify-content:flex-end;margin-top:4px;">
-            <button class="btn btn-primary" onclick="K.Settings.save()">Salvar Configurações</button>
-            </div>
-        </div>
-        </div>
-
-        </main><!-- /main-content -->
-
-        <!-- ================================================================
+<div class="settings-row">
+<div class="settings-row-label">Rede</div>
+<div class="status-badge unknown" id="sb-net"><div class="dot"></div>Verificando</div>
+</div>
+</div>
+<div class="settings-section">
+<h3>Dados</h3>
+<div class="settings-row">
+<div><div class="settings-row-label">Exportar Backup</div></div>
+<button class="btn btn-ghost btn-sm" onclick="App.Settings.exportBackup()"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg> Exportar JSON</button>
+</div>
+<div class="settings-row">
+<div><div class="settings-row-label">Importar Backup</div></div>
+<button class="btn btn-ghost btn-sm" onclick="document.getElementById('import-file-input').click()"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg> Importar JSON</button>
+</div>
+<div class="settings-row">
+<div><div class="settings-row-label">Limpar Dados Locais</div></div>
+<button class="btn btn-danger btn-sm" onclick="App.Settings.clearLocal()"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg> Limpar</button>
+</div>
+<input accept=".json" id="import-file-input" onchange="App.Settings.importBackup(this)" style="display:none" type="file"/>
+</div>
+<div style="display:flex;justify-content:flex-end;margin-top:4px;">
+<button class="btn btn-primary" onclick="App.Settings.save()">Salvar Configurações</button>
+</div>
+</div>
+</div>
+</main><!-- /main-content -->
+<!-- ================================================================
             MODALS
         ================================================================ -->
+<!-- Task Modal -->
+<div class="modal-overlay" id="task-modal">
+<div class="modal-box">
+<h3 id="task-modal-title">Nova Tarefa</h3>
+<input class="input" id="task-title-input" placeholder="Título da tarefa" style="margin-bottom:10px;"/>
+<textarea class="input" id="task-desc-input" placeholder="Descrição (opcional)" rows="3" style="margin-bottom:10px;"></textarea>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+<select class="input" id="task-priority-input" style="flex:1;">
+<option value="low">Prioridade Baixa</option>
+<option selected="" value="medium">Prioridade Média</option>
+<option value="high">Prioridade Alta</option>
+<option value="critical">Crítica</option>
+</select>
+<input class="input" id="task-date-input" style="flex:1;" type="date"/>
+</div>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.closeModal('task-modal')">Cancelar</button>
+<button class="btn btn-primary" onclick="App.Tasks.save()">Salvar</button>
+</div>
+</div>
+</div>
+<!-- Note Modal -->
+<div class="modal-overlay" id="note-modal">
+<div class="modal-box">
+<h3 id="note-modal-title">Nova Nota</h3>
+<input class="input" id="note-title-input" placeholder="Título" style="margin-bottom:10px;"/>
+<textarea class="input" id="note-content-input" placeholder="Conteúdo da nota..." rows="8"></textarea>
+<input class="input" id="note-tags-input" placeholder="Tags separadas por vírgula (ex: trabalho, ideia)" style="margin-top:10px;"/>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.closeModal('note-modal')">Cancelar</button>
 
-        <!-- Task Modal -->
-        <div class="modal-overlay" id="task-modal">
-        <div class="modal-box">
-            <h3 id="task-modal-title">Nova Tarefa</h3>
-            <input class="input" id="task-title-input" placeholder="Título da tarefa" style="margin-bottom:10px;"/>
-            <textarea class="input" id="task-desc-input" rows="3" placeholder="Descrição (opcional)" style="margin-bottom:10px;"></textarea>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-            <select class="input" id="task-priority-input" style="flex:1;">
-                <option value="low">Prioridade Baixa</option>
-                <option value="medium" selected>Prioridade Média</option>
-                <option value="high">Prioridade Alta</option>
-                <option value="critical">Crítica</option>
-            </select>
-            <input class="input" type="date" id="task-date-input" style="flex:1;"/>
-            </div>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('task-modal')">Cancelar</button>
-            <button class="btn btn-primary" onclick="K.Tasks.save()">Salvar</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Note Modal -->
-        <div class="modal-overlay" id="note-modal">
-        <div class="modal-box">
-            <h3 id="note-modal-title">Nova Nota</h3>
-            <input class="input" id="note-title-input" placeholder="Título" style="margin-bottom:10px;"/>
-            <textarea class="input" id="note-content-input" rows="8" placeholder="Conteúdo da nota..."></textarea>
-            <input class="input" id="note-tags-input" placeholder="Tags separadas por vírgula (ex: trabalho, ideia)" style="margin-top:10px;"/>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('note-modal')">Cancelar</button>
-            <button class="btn btn-ghost" onclick="K.Notes.aiAction()">Melhorar</button>
-            <button class="btn btn-primary" onclick="K.Notes.save()">Salvar</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Event Modal -->
-        <div class="modal-overlay" id="event-modal">
-        <div class="modal-box">
-            <h3>Novo Evento</h3>
-            <input class="input" id="event-title-input" placeholder="Título do evento" style="margin-bottom:10px;"/>
-            <textarea class="input" id="event-desc-input" rows="2" placeholder="Descrição (opcional)" style="margin-bottom:10px;"></textarea>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-            <input class="input" type="datetime-local" id="event-start-input" style="flex:1;"/>
-            <input class="input" type="datetime-local" id="event-end-input" style="flex:1;"/>
-            </div>
-            <input class="input" id="event-location-input" placeholder="Local (opcional)"/>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('event-modal')">Cancelar</button>
-            <button class="btn btn-primary" onclick="K.Cal.save()">Salvar</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Drive Text Modal -->
-        <div class="modal-overlay" id="drive-text-modal">
-        <div class="modal-box">
-            <h3 id="drive-text-modal-title">Novo Texto</h3>
-            <textarea class="input" id="drive-text-input" rows="8" placeholder="Digite seu texto aqui..."></textarea>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('drive-text-modal')">Cancelar</button>
-            <button class="btn btn-primary" onclick="K.Drive.saveText()">Salvar</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Drive Edit Modal -->
-        <div class="modal-overlay" id="drive-edit-modal">
-        <div class="modal-box">
-            <h3>Editar Texto</h3>
-            <textarea class="input" id="drive-edit-input" rows="10"></textarea>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('drive-edit-modal')">Cancelar</button>
-            <button class="btn btn-primary" onclick="K.Drive.updateText()">Salvar Alterações</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Drive Properties Modal -->
-        <div class="modal-overlay" id="drive-props-modal">
-        <div class="modal-box">
-            <h3>Propriedades</h3>
-            <input class="input" id="drive-props-name" placeholder="Nome do arquivo" style="margin-bottom:12px;"/>
-            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Tamanho</span><span id="props-size">--</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Criado em</span><span id="props-date">--</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--muted);">Tipo</span><span id="props-type">--</span></div>
-            </div>
-            <button class="btn btn-ghost" style="width:100%;margin-bottom:8px;" onclick="K.Drive.copyPropsLink()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Copiar Link</button>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('drive-props-modal')">Cancelar</button>
-            <button class="btn btn-primary" onclick="K.Drive.saveProps()">Salvar Nome</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Image Viewer -->
-        <div class="modal-overlay" id="image-viewer-modal" onclick="K.closeModal('image-viewer-modal')">
-        <button class="viewer-close" onclick="K.closeModal('image-viewer-modal')">×</button>
-        <img id="img-viewer-content" src="" onclick="event.stopPropagation()" />
-        </div>
-
-        <!-- Confirm Modal -->
-        <div class="modal-overlay" id="confirm-modal">
-        <div class="modal-box" style="max-width:380px;">
-            <h3>Confirmar Ação</h3>
-            <div class="confirm-question" id="confirm-question">Tem certeza?</div>
-            <div class="confirm-sub" id="confirm-sub"></div>
-            <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="K.closeModal('confirm-modal');K._confirmReject&&K._confirmReject()">Cancelar</button>
-            <button class="btn btn-danger" onclick="K.closeModal('confirm-modal');K._confirmResolve&&K._confirmResolve()">Confirmar</button>
-            </div>
-        </div>
-        </div>
-
-        <!-- Global Search Modal -->
-        <div class="modal-overlay" id="global-search-modal">
-        <div class="modal-box" style="max-width:640px;">
-            <h3>Busca Global</h3>
-            <div class="search-input-bar">
-            <input class="input" id="global-search-input" placeholder="Busque tarefas, notas, arquivos..." oninput="K.globalSearch(this.value)" autofocus/>
-            <button class="btn btn-ghost" onclick="K.closeModal('global-search-modal')">Fechar</button>
-            </div>
-            <div class="search-results" id="search-results"></div>
-        </div>
-        </div>
-
-        <!-- Upload Progress -->
-        <div class="upload-progress" id="upload-progress">
-        <div style="font-size:13px;color:var(--text);" id="upload-progress-label">Enviando arquivo...</div>
-        <div class="upload-progress-bar"><div class="upload-progress-fill" id="upload-progress-fill"></div></div>
-        </div>
-
-        <!-- Toast Container -->
-        <div id="toast-container"></div>
-
-        <!-- ================================================================
+<button class="btn btn-primary" onclick="App.Notes.save()">Salvar</button>
+</div>
+</div>
+</div>
+<!-- Event Modal -->
+<div class="modal-overlay" id="event-modal">
+<div class="modal-box">
+<h3>Novo Evento</h3>
+<input class="input" id="event-title-input" placeholder="Título do evento" style="margin-bottom:10px;"/>
+<textarea class="input" id="event-desc-input" placeholder="Descrição (opcional)" rows="2" style="margin-bottom:10px;"></textarea>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+<input class="input" id="event-start-input" style="flex:1;" type="datetime-local"/>
+<input class="input" id="event-end-input" style="flex:1;" type="datetime-local"/>
+</div>
+<input class="input" id="event-location-input" placeholder="Local (opcional)"/>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.closeModal('event-modal')">Cancelar</button>
+<button class="btn btn-primary" onclick="App.Cal.save()">Salvar</button>
+</div>
+</div>
+</div>
+<!-- Drive Text Modal -->
+<div class="modal-overlay" id="drive-text-modal">
+<div class="modal-box">
+<h3 id="drive-text-modal-title">Novo Texto</h3>
+<textarea class="input" id="drive-text-input" placeholder="Digite seu texto aqui..." rows="8"></textarea>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.closeModal('drive-text-modal')">Cancelar</button>
+<button class="btn btn-primary" onclick="App.Drive.saveText()">Salvar</button>
+</div>
+</div>
+</div>
+<!-- Drive Edit Modal -->
+<div class="modal-overlay" id="drive-edit-modal">
+<div class="modal-box">
+<h3>Editar Texto</h3>
+<textarea class="input" id="drive-edit-input" rows="10"></textarea>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.closeModal('drive-edit-modal')">Cancelar</button>
+<button class="btn btn-primary" onclick="App.Drive.updateText()">Salvar Alterações</button>
+</div>
+</div>
+</div>
+<!-- Drive Properties Modal -->
+<div class="modal-overlay" id="drive-props-modal">
+<div class="modal-box">
+<h3>Propriedades</h3>
+<input class="input" id="drive-props-name" placeholder="Nome do arquivo" style="margin-bottom:12px;"/>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+<div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Tamanho</span><span id="props-size">--</span></div>
+<div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);"><span style="color:var(--muted);">Criado em</span><span id="props-date">--</span></div>
+<div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--muted);">Tipo</span><span id="props-type">--</span></div>
+</div>
+<button class="btn btn-ghost" onclick="App.Drive.copyPropsLink()" style="width:100%;margin-bottom:8px;"><svg fill="none" height="14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="14"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Copiar Link</button>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.closeModal('drive-props-modal')">Cancelar</button>
+<button class="btn btn-primary" onclick="App.Drive.saveProps()">Salvar Nome</button>
+</div>
+</div>
+</div>
+<!-- Image Viewer -->
+<div class="modal-overlay" id="image-viewer-modal" onclick="App.closeModal('image-viewer-modal')">
+<button class="viewer-close" onclick="App.closeModal('image-viewer-modal')">×</button>
+<img id="img-viewer-content" onclick="event.stopPropagation()" src=""/>
+</div>
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirm-modal">
+<div class="modal-box" style="max-width:380px;">
+<h3>Confirmar Ação</h3>
+<div class="confirm-question" id="confirm-question">Tem certeza?</div>
+<div class="confirm-sub" id="confirm-sub"></div>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="App.cancelConfirm()">Cancelar</button>
+<button class="btn btn-danger" onclick="App.resolveConfirm()">Confirmar</button>
+</div>
+</div>
+</div>
+<!-- Global Search Modal -->
+<div class="modal-overlay" id="global-search-modal">
+<div class="modal-box" style="max-width:640px;">
+<h3>Busca Global</h3>
+<div class="search-input-bar">
+<input autofocus="" class="input" id="global-search-input" oninput="App.globalSearch(this.value)" placeholder="Busque tarefas, notas, arquivos..."/>
+<button class="btn btn-ghost" onclick="App.closeModal('global-search-modal')">Fechar</button>
+</div>
+<div class="search-results" id="search-results"></div>
+</div>
+</div>
+<!-- Upload Progress -->
+<div class="upload-progress" id="upload-progress">
+<div id="upload-progress-label" style="font-size:13px;color:var(--text);">Enviando arquivo...</div>
+<div class="upload-progress-bar"><div class="upload-progress-fill" id="upload-progress-fill"></div></div>
+</div>
+<!-- Toast Container -->
+<div id="toast-container"></div>
+<!-- ================================================================
             JAVASCRIPT
         ================================================================ -->
-        <script>
+<script>
             /* ======================================================================
-            K.O.S.A v2 — JavaScript Engine
+            Kaleb Organization v2 — JavaScript Engine
             Organized modular architecture in a single script block
             ====================================================================== */
 
@@ -1727,12 +1368,6 @@
             const CFG = {
                 SUPABASE_URL:  'https://uosubywnpexfdykxrsda.supabase.co',
                 SUPABASE_KEY:  'sb_publishable_c7Gcs7TYe8elQ-lZ50cjUA_EERGehuQ',
-                GEMINI_KEY:    'AQ.Ab8RN6I_S4-zijtTrZEqAmWgji14kHuNXXFXToRd8q7bzFehMw',
-                GEMINI_MODELS: [
-                    'gemini-2.5-flash', // Correção do nome dos modelos válidos atuais
-                    'gemini-2.0-flash',
-                    'gemini-1.5-flash'
-                ],
                 BUCKET: 'arquivos',
                 TABLE:  'arquivos',
                 POMO_DURATIONS: { focus: 25*60, short: 5*60, long: 15*60 },
@@ -1745,7 +1380,6 @@
             tasks:       [],
             notes:       [],
             events:      [],
-            memories:    [],
             driveItems:  [],
             driveFilter: 'all',
             driveSearch: '',
@@ -1761,25 +1395,11 @@
                 interval: null, sessions: [],
                 taskId: null,
             },
-            voice: {
-                enabled: true,
-                listening: false,
-                speaking: false,
-                paused: false,
-                recognition: null,
-                restartTimeout: null,
-                restartAttempts: 0,
-                rate: 1,
-                pitch: 1,
-            },
-            geminiModel: null,
             supabaseClient: null,
-            conversation: [],
             settings: {},
             driveEditingId: null,
             drivePropsId: null,
             drivePropsUrl: '',
-            studyLastResult: '',
             taskEditingId: null,
             noteEditingId: null,
             online: navigator.onLine,
@@ -1895,78 +1515,33 @@
             // 6. SETTINGS ENGINE
             // ─────────────────────────────────────────────────────────────────────
             function loadSettings() {
-            const s = LS.get('kosa_settings', {});
+            const s = LS.get('ko_settings', {});
             STATE.settings = s;
             const cfg = STATE.settings;
 
-            // Override CFG keys if user saved custom ones
-            if (cfg.geminiKey) CFG.GEMINI_KEY = cfg.geminiKey;
             if (cfg.sbUrl) CFG.SUPABASE_URL = cfg.sbUrl;
             if (cfg.sbKey) CFG.SUPABASE_KEY = cfg.sbKey;
-            if (cfg.voiceRate) STATE.voice.rate = parseFloat(cfg.voiceRate);
-            if (cfg.voicePitch) STATE.voice.pitch = parseFloat(cfg.voicePitch);
-            if (cfg.voiceEnabled !== undefined) STATE.voice.enabled = cfg.voiceEnabled;
 
-            // Fill settings UI
             const id = (i,v) => { const el=document.getElementById(i); if(el && v!==undefined) el.value=v; };
             id('cfg-username', cfg.username || '');
-            id('cfg-assistant-name', cfg.assistantName || 'KOSA');
-            id('cfg-gemini-key', cfg.geminiKey || '');
             id('cfg-sb-url', cfg.sbUrl || CFG.SUPABASE_URL);
             id('cfg-sb-key', cfg.sbKey || '');
-            id('cfg-voice-rate', cfg.voiceRate || 1);
-            id('cfg-voice-pitch', cfg.voicePitch || 1);
-
-            const tv = document.getElementById('toggle-voice');
-            if (tv) tv.className = `toggle-switch ${STATE.voice.enabled?'on':''}`;
             }
 
-            const K_Settings = {
+            const App_Settings = {
             save: () => {
                 const get = id => { const e=document.getElementById(id); return e?e.value.trim():''; };
                 const cfg = {
                 username: get('cfg-username'),
-                assistantName: get('cfg-assistant-name') || 'KOSA',
-                geminiKey: get('cfg-gemini-key'),
                 sbUrl: get('cfg-sb-url'),
                 sbKey: get('cfg-sb-key'),
-                voiceRate: document.getElementById('cfg-voice-rate')?.value || 1,
-                voicePitch: document.getElementById('cfg-voice-pitch')?.value || 1,
-                voiceEnabled: STATE.voice.enabled,
                 };
-                LS.set('kosa_settings', cfg);
+                LS.set('ko_settings', cfg);
                 STATE.settings = cfg;
-                if (cfg.geminiKey) CFG.GEMINI_KEY = cfg.geminiKey;
                 if (cfg.sbUrl) CFG.SUPABASE_URL = cfg.sbUrl;
                 if (cfg.sbKey) CFG.SUPABASE_KEY = cfg.sbKey;
-                STATE.geminiModel = null; // reset cached model
-                // Re-init Supabase if keys changed
                 initSupabase();
                 toast('Configurações salvas', 'success');
-            },
-            toggleOption: (key, el) => {
-                if (key === 'voiceEnabled') STATE.voice.enabled = !STATE.voice.enabled;
-                el.className = `toggle-switch ${STATE.voice.enabled?'on':''}`;
-                const btn = document.getElementById('btn-voice-toggle');
-                if (btn) {
-                    const svgOn = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>`;
-                    btn.innerHTML = `${STATE.voice.enabled ? svgOn : ''} Voz: ${STATE.voice.enabled?'On':'Off'}`;
-                }
-            },
-            setVoiceRate: (v) => { STATE.voice.rate = parseFloat(v); },
-            setVoicePitch: (v) => { STATE.voice.pitch = parseFloat(v); },
-            testGemini: async () => {
-                const btn = document.getElementById('btn-test-gemini');
-                if (btn) btn.textContent = 'Testando...';
-                try {
-                const r = await GeminiAI.ask('Responda apenas: "OK"');
-                updateStatusBadge('sb-gemini', r ? 'ok' : 'err', r ? 'Online' : 'Erro');
-                toast(r ? 'Gemini OK: '+r : 'Gemini sem resposta', r?'success':'error');
-                } catch(e) {
-                updateStatusBadge('sb-gemini','err','Offline');
-                toast('Gemini falhou: '+e.message,'error');
-                }
-                if (btn) btn.textContent = 'Testar Gemini';
             },
             testSupabase: async () => {
                 const btn = document.getElementById('btn-test-sb');
@@ -1989,14 +1564,14 @@
                 tasks: STATE.tasks,
                 notes: STATE.notes,
                 events: STATE.events,
-                memories: STATE.memories,
+                driveItems: STATE.driveItems,
                 pomodoro_sessions: STATE.pomodoro.sessions,
                 settings: STATE.settings,
                 };
                 const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href=url; a.download=`kosa_backup_${H.today()}.json`;
+                a.href=url; a.download=`ko_backup_${H.today()}.json`;
                 document.body.appendChild(a); a.click(); document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 toast('Backup exportado','success');
@@ -2007,11 +1582,10 @@
                 reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
-                    if (data.tasks) { STATE.tasks = data.tasks; LS.set('kosa_tasks', STATE.tasks); }
-                    if (data.notes) { STATE.notes = data.notes; LS.set('kosa_notes', STATE.notes); }
-                    if (data.events) { STATE.events = data.events; LS.set('kosa_events', STATE.events); }
-                    if (data.memories) { STATE.memories = data.memories; LS.set('kosa_memories', STATE.memories); }
-                    if (data.pomodoro_sessions) { STATE.pomodoro.sessions = data.pomodoro_sessions; LS.set('kosa_pomo', STATE.pomodoro.sessions); }
+                    if (data.tasks) { STATE.tasks = data.tasks; LS.set('ko_tasks', STATE.tasks); }
+                    if (data.notes) { STATE.notes = data.notes; LS.set('ko_notes', STATE.notes); }
+                    if (data.events) { STATE.events = data.events; LS.set('ko_events', STATE.events); }
+                    if (data.pomodoro_sessions) { STATE.pomodoro.sessions = data.pomodoro_sessions; LS.set('ko_pomo', STATE.pomodoro.sessions); }
                     renderTasks(); renderNotes(); renderCalendar(); renderPomoLog();
                     updateDashboard();
                     toast('Backup importado com sucesso','success');
@@ -2021,11 +1595,10 @@
                 input.value='';
             },
             clearLocal: () => {
-                K.confirm('Limpar todos os dados locais?','Esta ação não pode ser desfeita.').then(()=>{
-                ['kosa_tasks','kosa_notes','kosa_events','kosa_memories','kosa_pomo','kosa_conversation','kosa_settings']
-                    .forEach(k=>LS.del(k));
-                STATE.tasks=[];STATE.notes=[];STATE.events=[];STATE.memories=[];STATE.pomodoro.sessions=[];
-                renderTasks(); renderNotes(); renderCalendar(); renderPomoLog(); updateDashboard();
+                App.confirm('Limpar todos os dados locais?','Esta ação não pode ser desfeita.').then(()=>{
+                ['ko_tasks','ko_notes','ko_events','ko_pomo','ko_drive_cache','ko_settings'].forEach(k=>LS.del(k));
+                STATE.tasks=[];STATE.notes=[];STATE.events=[];STATE.pomodoro.sessions=[];STATE.driveItems=[];
+                renderTasks(); renderNotes(); renderCalendar(); renderPomoLog(); renderDrive(); updateDashboard();
                 toast('Dados locais apagados','warning');
                 }).catch(()=>{});
             },
@@ -2035,17 +1608,12 @@
             const el = document.getElementById(id);
             if (!el) return;
             el.className = `status-badge ${type}`;
-            const dot = el.querySelector('.dot');
-            if (dot) {
-                const colors = {ok:'var(--green)', err:'var(--red)', unknown:'var(--muted)', warn:'var(--amber)'};
-                dot.style.background = colors[type]||colors.unknown;
-            }
             el.innerHTML = `<div class="dot" style="background:${type==='ok'?'var(--green)':type==='err'?'var(--red)':'var(--muted)'}"></div>${label}`;
             }
 
             function updateSysStatus(key, type) {
-            const dotMap = {gemini:'dot-gemini', supabase:'dot-supabase', mic:'dot-mic', net:'dot-net'};
-            const rc = {gemini:'rc-gemini', supabase:'rc-supabase'};
+            const dotMap = {supabase:'dot-supabase', net:'dot-net'};
+            const rc = {supabase:'rc-supabase'};
             const dot = document.getElementById(dotMap[key]);
             const colors = {ok:'var(--green)', err:'var(--red)', warn:'var(--amber)', off:'var(--border2)'};
             if (dot) dot.style.background = colors[type]||colors.off;
@@ -2102,11 +1670,11 @@
                     .from(CFG.TABLE).select('*').order('criado_em',{ascending:false});
                     if (error) throw error;
                     STATE.driveItems = data || [];
-                    LS.set('kosa_drive_cache', STATE.driveItems);
+                    LS.set('ko_drive_cache', STATE.driveItems);
                     return STATE.driveItems;
                 } catch(e) { console.warn('Drive load fallback:', e.message); }
                 }
-                STATE.driveItems = LS.get('kosa_drive_cache', []);
+                STATE.driveItems = LS.get('ko_drive_cache', []);
                 return STATE.driveItems;
             },
             driveUpload: async (file, onProgress) => {
@@ -2138,9 +1706,9 @@
                 if (error) throw error;
                 } else {
                 // Local fallback
-                const localItems = LS.get('kosa_drive_cache', []);
+                const localItems = LS.get('ko_drive_cache', []);
                 localItems.unshift({...record, id: H.uid()});
-                LS.set('kosa_drive_cache', localItems);
+                LS.set('ko_drive_cache', localItems);
                 STATE.driveItems = localItems;
                 }
             },
@@ -2150,7 +1718,7 @@
                 if (error) throw error;
                 } else {
                 const i = STATE.driveItems.findIndex(x=>x.id===id||x.uuid===id);
-                if (i>=0) { STATE.driveItems[i]={...STATE.driveItems[i],...data}; LS.set('kosa_drive_cache',STATE.driveItems); }
+                if (i>=0) { STATE.driveItems[i]={...STATE.driveItems[i],...data}; LS.set('ko_drive_cache',STATE.driveItems); }
                 }
             },
             driveDelete: async (id, path, col) => {
@@ -2162,429 +1730,16 @@
                 if (error) throw error;
                 } else {
                 STATE.driveItems = STATE.driveItems.filter(x=>x.id!==id&&x.uuid!==id);
-                LS.set('kosa_drive_cache', STATE.driveItems);
+                LS.set('ko_drive_cache', STATE.driveItems);
                 }
             },
             };
 
             // ─────────────────────────────────────────────────────────────────────
-            // 8. GEMINI AI ENGINE (COM LÓGICA AUTO-DISCOVERY DO JARVIS)
-            // ─────────────────────────────────────────────────────────────────────
-            const GeminiAI = {
-                _cache: null,
-                
-                getModel: async () => {
-                    if (GeminiAI._cache) return GeminiAI._cache;
-                    
-                    const key = CFG.GEMINI_KEY;
-                    if (!key || key.length < 10) throw new Error('Chave Gemini não configurada');
-
-                    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models", {
-                        method: "GET",
-                        headers: { "x-goog-api-key": key }
-                    });
-
-                    const data = await response.json();
-                    if (!response.ok || data.error) {
-                        throw new Error(data?.error?.message || "Não foi possível listar os modelos.");
-                    }
-
-                    const models = Array.isArray(data.models) ? data.models : [];
-                    const validModels = models.filter(model => {
-                        const methods = model.supportedGenerationMethods || [];
-                        const name = model.name || "";
-                        return name.includes("gemini") && methods.includes("generateContent");
-                    });
-
-                    const priority = [
-                        "models/gemini-2.5-flash",
-                        "models/gemini-2.0-flash",
-                        "models/gemini-1.5-flash",
-                        "models/gemini-1.5-pro"
-                    ];
-
-                    let selected = null;
-                    for (const preferred of priority) {
-                        selected = validModels.find(model => model.name === preferred);
-                        if (selected) break;
-                    }
-
-                    if (!selected) selected = validModels[0];
-                    if (!selected) throw new Error("Nenhum modelo compatível foi encontrado.");
-
-                    GeminiAI._cache = selected.name; // Já inclui o "models/" no nome
-                    STATE.geminiModel = selected.name;
-                    updateSysStatus('gemini','ok');
-                    updateStatusBadge('sb-gemini','ok','Online');
-                    
-                    return selected.name;
-                },
-
-                ask: async (prompt, systemPrompt='', retries=1) => {
-                    const key = CFG.GEMINI_KEY;
-                    if (!key || key.length < 10) return null;
-
-                    let modelName;
-                    try { modelName = await GeminiAI.getModel(); }
-                    catch(e) {
-                        updateSysStatus('gemini','err');
-                        updateStatusBadge('sb-gemini','err','Offline');
-                        throw e;
-                    }
-
-                    for (let attempt = 0; attempt <= retries; attempt++) {
-                        try {
-                            const response = await fetch(
-                                `https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent`,
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        "x-goog-api-key": key
-                                    },
-                                    body: JSON.stringify({
-                                        contents: [{
-                                            role: "user",
-                                            parts: [{ text: (systemPrompt ? systemPrompt+'\n\n' : '') + prompt }]
-                                        }],
-                                        generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-                                    })
-                                }
-                            );
-
-                            const data = await response.json();
-                            
-                            if (!response.ok || data.error) {
-                                if (attempt < retries) { await new Promise(res=>setTimeout(res, 1500)); continue; }
-                                throw new Error(data?.error?.message || "erro desconhecido.");
-                            }
-
-                            const reply = data?.candidates?.[0]?.content?.parts?.map(part => part.text || "").join("").trim();
-                            if (!reply && attempt < retries) continue;
-                            
-                            return reply || "A IA respondeu, mas não retornou texto.";
-
-                        } catch (e) {
-                            if (attempt >= retries) throw e;
-                            await new Promise(res=>setTimeout(res, 1500));
-                        }
-                    }
-                    return null;
-                },
-
-                // KOSA system prompt
-                systemPrompt: () => {
-                    const name = STATE.settings.username || 'Usuário';
-                    const asst = STATE.settings.assistantName || 'KOSA';
-                    const mem = STATE.memories.slice(-5).map(m=>`${m.chave}: ${m.valor}`).join('\n');
-                    return `Você é ${asst}, um assistente pessoal inteligente integrado ao sistema operacional pessoal do usuário.
-
-                Usuário: ${name}
-                ${mem ? 'Memórias ativas:\n'+mem : ''}
-
-                Você ajuda com tarefas, organização, estudos, arquivos, ideias, produtividade, lembretes, agenda, planejamento e comandos internos do sistema.
-
-                Responda em português do Brasil, com tom direto, profissional, levemente futurista.
-
-                Quando o usuário pedir algo que pode virar uma AÇÃO no sistema, responda APENAS em JSON válido neste formato (sem markdown, sem explicação adicional):
-                {"tipo":"acao","acao":"nome_da_acao","dados":{...},"resposta":"Texto que o usuário verá"}
-
-                Ações disponíveis: criar_tarefa, listar_tarefas, concluir_tarefa, criar_nota, listar_notas, criar_evento, iniciar_pomodoro, parar_pomodoro, abrir_pagina, buscar_arquivo, criar_plano_estudo, salvar_memoria, consultar_memoria, organizar_dia, planejar_amanha, gerar_ideias, criar_checklist
-
-                Quando for conversa normal, responda texto simples sem JSON.
-                Seja objetivo, útil e conciso.`;
-                },
-                };   
-                // ─────────────────────────────────────────────────────────────────────
-                // 9. VOICE ENGINE
-                // ─────────────────────────────────────────────────────────────────────
-                const Voice = {
-                SpeechRec: window.SpeechRecognition || window.webkitSpeechRecognition || null,
-
-                setHudState: (state) => {
-                    const hud = document.getElementById('kosa-hud');
-                    const lbl = document.getElementById('kosa-state-label');
-                    const btn = document.getElementById('btn-kosa-listen');
-                    if (hud) hud.className = `kosa-hud ${state}`;
-                    if (lbl) lbl.textContent = state;
-                    if (btn) {
-                    const labels = {
-                        idle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:6px;vertical-align:middle;display:inline-block;"><path d="M12 1v11M19 10v1a7 7 0 0 1-14 0v-1M12 23v-4"></path></svg> Ouvir`,
-                        listening: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:6px;vertical-align:middle;display:inline-block;"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg> Parar`,
-                        thinking: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:6px;vertical-align:middle;display:inline-block;animation:spin 2s linear infinite;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> Pensando`,
-                        responding: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:6px;vertical-align:middle;display:inline-block;"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> Falando`,
-                        error: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;margin-right:6px;vertical-align:middle;display:inline-block;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"></path></svg> Erro`
-                    };
-                    btn.innerHTML = labels[state] || labels.idle;
-                    }
-                },
-
-                speak: async (text) => {
-                    if (!STATE.voice.enabled) return;
-
-                    Voice.setHudState('responding');
-                    STATE.voice.speaking = true;
-
-                    // Stop previous audio strictly to avoid overlap
-                    if (window.currentKosaAudio) {
-                        window.currentKosaAudio.pause();
-                        window.currentKosaAudio = null;
-                    }
-                    if (window.speechSynthesisLoopInterval) clearInterval(window.speechSynthesisLoopInterval);
-                    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-
-                    // Credenciais Injetadas ElevenLabs
-                    const ELEVEN_LABS_KEY = "8661117e4933e45af32be55897aeb6efd77243d54e8e998fd1f3f261aaa4488c";
-                    const VOICE_ID = "4r3G9XKliGgVZLKMgjik";
-
-                    try {
-                        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${VOICE_ID}`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "xi-api-key": ELEVEN_LABS_KEY
-                            },
-                            body: JSON.stringify({
-                                text: text,
-                                model_id: "eleven_multilingual_v2",
-                                voice_settings: { stability: 0.5, similarity_boost: 0.75 }
-                            })
-                        });
-
-                        if (!response.ok) throw new Error("Erro ElevenLabs");
-
-                        const blob = await response.blob();
-                        const audioUrl = URL.createObjectURL(blob);
-
-                        // Ancoragem em window protege do Garbage Collector cortando a fala na metade
-                        window.currentKosaAudio = new Audio(audioUrl);
-                        window.currentKosaAudio.onended = () => {
-                            STATE.voice.speaking = false;
-                            window.currentKosaAudio = null;
-                            Voice.setHudState('idle');
-                            URL.revokeObjectURL(audioUrl);
-                            if (!STATE.voice.paused && STATE.currentPage === 'kosa') {
-                                clearTimeout(STATE.voice.restartTimeout);
-                                STATE.voice.restartTimeout = setTimeout(Voice.startListening, 600);
-                            }
-                        };
-                        window.currentKosaAudio.onerror = () => {
-                            STATE.voice.speaking = false;
-                            window.currentKosaAudio = null;
-                            Voice.setHudState('idle');
-                            URL.revokeObjectURL(audioUrl);
-                            Voice.fallbackSpeechSynthesis(text);
-                        };
-
-                        window.currentKosaAudio.play();
-
-                    } catch (e) {
-                        console.warn("ElevenLabs falhou, ativando fallback nativo", e);
-                        Voice.fallbackSpeechSynthesis(text);
-                    }
-                },
-
-                // Fallback Engine com contorno do Chrome Bug
-                fallbackSpeechSynthesis: (text) => {
-                    if (!('speechSynthesis' in window)) {
-                        STATE.voice.speaking = false;
-                        Voice.setHudState('idle');
-                        return;
-                    }
-
-                    window.speechSynthesis.cancel();
-                    const utt = new SpeechSynthesisUtterance(text);
-                    utt.lang = 'pt-BR';
-                    utt.rate = STATE.voice.rate || 1;
-                    utt.pitch = STATE.voice.pitch || 1;
-
-                    const voices = window.speechSynthesis.getVoices();
-                    const best = voices.find(v => v.lang.toLowerCase().startsWith('pt') && v.localService) ||
-                                voices.find(v => v.lang.toLowerCase().startsWith('pt')) || voices[0];
-                    if (best) utt.voice = best;
-
-                    // Loop para evitar que a voz pare após 15 segundos
-                    window.speechSynthesisLoopInterval = setInterval(() => {
-                        if (window.speechSynthesis.speaking) {
-                            window.speechSynthesis.pause();
-                            window.speechSynthesis.resume();
-                        } else {
-                            clearInterval(window.speechSynthesisLoopInterval);
-                        }
-                    }, 10000);
-
-                    utt.onend = () => {
-                        clearInterval(window.speechSynthesisLoopInterval);
-                        STATE.voice.speaking = false;
-                        Voice.setHudState('idle');
-                        if (!STATE.voice.paused && STATE.currentPage === 'kosa') {
-                            clearTimeout(STATE.voice.restartTimeout);
-                            STATE.voice.restartTimeout = setTimeout(Voice.startListening, 600);
-                        }
-                    };
-
-                    utt.onerror = () => {
-                        clearInterval(window.speechSynthesisLoopInterval);
-                        STATE.voice.speaking = false;
-                        Voice.setHudState('idle');
-                    };
-
-                    window.speechSynthesis.speak(utt);
-                },
-
-                clearSpeech: () => {
-                    if (window.currentKosaAudio) {
-                        window.currentKosaAudio.pause();
-                        window.currentKosaAudio = null;
-                    }
-                    if (window.speechSynthesisLoopInterval) clearInterval(window.speechSynthesisLoopInterval);
-                    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-                    STATE.voice.speaking = false;
-                    Voice.setHudState('idle');
-                },
-
-                startListening: () => {
-                    if (!Voice.SpeechRec) return;
-                    if (STATE.voice.speaking) return;
-                    if (STATE.voice.listening) return;
-                    if (STATE.voice.paused) return;
-                    if (STATE.voice.restartAttempts > 8) {
-                    clearTimeout(STATE.voice.restartTimeout);
-                    STATE.voice.restartTimeout = setTimeout(() => {
-                        STATE.voice.restartAttempts = 0;
-                        Voice.startListening();
-                    }, 10000);
-                    return;
-                    }
-
-                    try {
-                    const rec = new Voice.SpeechRec();
-                    rec.lang = 'pt-BR';
-                    rec.continuous = false;
-                    rec.interimResults = true;
-
-                    rec.onstart = () => {
-                        STATE.voice.listening = true;
-                        STATE.voice.recognition = rec;
-                        STATE.voice.restartAttempts = 0;
-                        Voice.setHudState('listening');
-                        updateSysStatus('mic','ok');
-                        updateStatusBadge('sb-mic','ok','Ativo');
-                    };
-
-                    rec.onresult = (e) => {
-                        let interim = '', final = '';
-                        for (let i=e.resultIndex; i<e.results.length; i++) {
-                        const t = e.results[i][0].transcript;
-                        if (e.results[i].isFinal) final += t;
-                        else interim += t;
-                        }
-                        const transcript = document.getElementById('kosa-transcript');
-                        if (transcript) transcript.textContent = interim || final;
-                        if (final.trim()) {
-                        rec.stop();
-                        K.processVoiceCommand(final.trim());
-                        }
-                    };
-
-                    rec.onerror = (e) => {
-                        STATE.voice.listening = false;
-                        STATE.voice.recognition = null;
-                        if (e.error === 'not-allowed' || e.error === 'permission-denied') {
-                        STATE.voice.paused = true;
-                        Voice.setHudState('error');
-                        updateSysStatus('mic','err');
-                        updateStatusBadge('sb-mic','err','Bloqueado');
-                        toast('Microfone bloqueado. Verifique as permissões.','error');
-                        return;
-                        }
-                        if (e.error === 'no-speech') {
-                        Voice.setHudState('idle');
-                        } else {
-                        Voice.setHudState('idle');
-                        }
-                        STATE.voice.restartAttempts++;
-                        if (!STATE.voice.paused && STATE.currentPage === 'kosa') {
-                        clearTimeout(STATE.voice.restartTimeout);
-                        STATE.voice.restartTimeout = setTimeout(Voice.startListening, 1200);
-                        }
-                    };
-
-                    rec.onend = () => {
-                        STATE.voice.listening = false;
-                        STATE.voice.recognition = null;
-                        if (!STATE.voice.paused && !STATE.voice.speaking && STATE.currentPage === 'kosa') {
-                        clearTimeout(STATE.voice.restartTimeout);
-                        STATE.voice.restartTimeout = setTimeout(() => {
-                            STATE.voice.restartAttempts++;
-                            Voice.startListening();
-                        }, 600);
-                        } else {
-                        Voice.setHudState('idle');
-                        }
-                    };
-
-                    rec.start();
-                    } catch(e) {
-                    STATE.voice.listening = false;
-                    Voice.setHudState('idle');
-                    }
-                },
-
-                stopListening: () => {
-                    clearTimeout(STATE.voice.restartTimeout);
-                    STATE.voice.paused = true;
-                    STATE.voice.listening = false;
-                    if (STATE.voice.recognition) {
-                    try { STATE.voice.recognition.stop(); } catch {}
-                    STATE.voice.recognition = null;
-                    }
-                    Voice.setHudState('idle');
-                },
-
-                toggleListening: () => {
-                    if (STATE.voice.listening || !STATE.voice.paused) {
-                    Voice.stopListening();
-                    toast('Escuta pausada','info',1500);
-                    } else {
-                    STATE.voice.paused = false;
-                    Voice.startListening();
-                    toast('Escuta ativa','info',1500);
-                    }
-                },
-
-                toggle: () => {
-                    STATE.voice.enabled = !STATE.voice.enabled;
-                    const btn = document.getElementById('btn-voice-toggle');
-                    if (btn) {
-                        const svgOn = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg>`;
-                        const svgOff = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 1 5 10v-2m14 0v2a7 7 0 0 1-.11 1.23M12 19v3"/></svg>`;
-                        btn.innerHTML = `${STATE.voice.enabled ? svgOn : svgOff} Voz: ${STATE.voice.enabled?'On':'Off'}`;
-                    }
-                    const t = document.getElementById('toggle-voice');
-                    if (t) t.className = `toggle-switch ${STATE.voice.enabled?'on':''}`;
-                    if (!STATE.voice.enabled) Voice.clearSpeech();
-                },
-
-                micCheck: async () => {
-                    if (!navigator.mediaDevices) { updateSysStatus('mic','off'); updateStatusBadge('sb-mic','err','Indisponível'); return; }
-                    if (!Voice.SpeechRec) { updateSysStatus('mic','warn'); updateStatusBadge('sb-mic','err','API ausente'); return; }
-                    try {
-                    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-                    stream.getTracks().forEach(t=>t.stop());
-                    updateSysStatus('mic','ok');
-                    updateStatusBadge('sb-mic','ok','Permitido');
-                    } catch {
-                    updateSysStatus('mic','err');
-                    updateStatusBadge('sb-mic','err','Bloqueado');
-                    }
-                },
-                };
-            // ─────────────────────────────────────────────────────────────────────
             // 10. TASKS SYSTEM
             // ─────────────────────────────────────────────────────────────────────
             const Tasks = {
-            load: () => { STATE.tasks = LS.get('kosa_tasks', []); },
+            load: () => { STATE.tasks = LS.get('ko_tasks', []); },
             save: () => {
                 const title = document.getElementById('task-title-input')?.value.trim();
                 if (!title) { toast('Informe um título','warning'); return; }
@@ -2610,8 +1765,8 @@
                 toast('Tarefa criada','success');
                 }
 
-                LS.set('kosa_tasks', STATE.tasks);
-                K.closeModal('task-modal');
+                LS.set('ko_tasks', STATE.tasks);
+                App.closeModal('task-modal');
                 STATE.taskEditingId = null;
                 renderTasks();
                 updateDashboard();
@@ -2623,15 +1778,15 @@
                 t.done = !t.done;
                 t.status = t.done ? 'done' : 'pending';
                 t.updatedAt = H.now();
-                LS.set('kosa_tasks', STATE.tasks);
+                LS.set('ko_tasks', STATE.tasks);
                 renderTasks();
                 updateDashboard();
                 if (t.done) { H.playBeep(880,0.1,0.2); toast('Tarefa concluída!','success'); }
             },
             del: async (id) => {
-                await K.confirm('Excluir esta tarefa?');
+                await App.confirm('Excluir esta tarefa?');
                 STATE.tasks = STATE.tasks.filter(x=>x.id!==id);
-                LS.set('kosa_tasks', STATE.tasks);
+                LS.set('ko_tasks', STATE.tasks);
                 renderTasks(); updateDashboard(); updatePomoTaskList();
                 toast('Tarefa excluída','info');
             },
@@ -2643,7 +1798,7 @@
                 document.getElementById('task-priority-input').value = t.priority || 'medium';
                 document.getElementById('task-date-input').value = t.dueDate || '';
                 document.getElementById('task-modal-title').textContent = 'Editar Tarefa';
-                K.openModal('task-modal');
+                App.openModal('task-modal');
             },
             setFilter: (f, el) => {
                 STATE.taskFilter = f;
@@ -2678,7 +1833,7 @@
             }
             list.innerHTML = tasks.map(t=>`
                 <div class="task-item ${t.done?'done':''}" id="task-${t.id}">
-                <div class="task-check" onclick="K.Tasks.toggle('${t.id}')">
+                <div class="task-check" onclick="App.Tasks.toggle('${t.id}')">
                     <svg class="task-check-icon" viewBox="0 0 12 12" fill="currentColor"><polyline points="2,6 5,9 10,3" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                 </div>
                 <div class="task-content">
@@ -2690,8 +1845,8 @@
                     </div>
                 </div>
                 <div class="task-actions">
-                    <button class="task-action-btn" onclick="K.Tasks.edit('${t.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
-                    <button class="task-action-btn" onclick="K.Tasks.del('${t.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    <button class="task-action-btn" onclick="App.Tasks.edit('${t.id}')" title="Editar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button>
+                    <button class="task-action-btn" onclick="App.Tasks.del('${t.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                 </div>
                 </div>
             `).join('');
@@ -2701,7 +1856,7 @@
             // 11. NOTES SYSTEM
             // ─────────────────────────────────────────────────────────────────────
             const Notes = {
-            load: () => { STATE.notes = LS.get('kosa_notes', []); },
+            load: () => { STATE.notes = LS.get('ko_notes', []); },
             save: () => {
                 const title = document.getElementById('note-title-input')?.value.trim();
                 const content = document.getElementById('note-content-input')?.value.trim();
@@ -2726,15 +1881,15 @@
                 STATE.notes.unshift(note);
                 toast('Nota salva','success');
                 }
-                LS.set('kosa_notes', STATE.notes);
-                K.closeModal('note-modal');
+                LS.set('ko_notes', STATE.notes);
+                App.closeModal('note-modal');
                 STATE.noteEditingId = null;
                 renderNotes();
             },
             del: async (id) => {
-                await K.confirm('Excluir esta nota?');
+                await App.confirm('Excluir esta nota?');
                 STATE.notes = STATE.notes.filter(x=>x.id!==id);
-                LS.set('kosa_notes', STATE.notes);
+                LS.set('ko_notes', STATE.notes);
                 renderNotes();
                 toast('Nota excluída','info');
             },
@@ -2745,30 +1900,18 @@
                 document.getElementById('note-content-input').value = n.content||'';
                 document.getElementById('note-tags-input').value = (n.tags||[]).join(', ');
                 document.getElementById('note-modal-title').textContent = 'Editar Nota';
-                K.openModal('note-modal');
+                App.openModal('note-modal');
             },
             pin: (id) => {
                 const n = STATE.notes.find(x=>x.id===id); if (!n) return;
                 n.pinned = !n.pinned;
-                LS.set('kosa_notes', STATE.notes);
+                LS.set('ko_notes', STATE.notes);
                 renderNotes();
                 toast(n.pinned?'Nota fixada':'Nota desafixada','info');
             },
             copy: (id) => {
                 const n = STATE.notes.find(x=>x.id===id); if (!n) return;
                 navigator.clipboard.writeText(`${n.title}\n\n${n.content||''}`).then(()=>toast('Copiado!','success')).catch(()=>toast('Falha ao copiar','error'));
-            },
-            aiAction: async () => {
-                const content = document.getElementById('note-content-input')?.value.trim();
-                if (!content) { toast('Escreva algo para melhorar','warning'); return; }
-                toast('Melhorando texto...','info');
-                try {
-                const r = await GeminiAI.ask(`Melhore este texto: "${content}"`, 'Retorne apenas o texto melhorado, sem introduções ou explicações.');
-                if (r && document.getElementById('note-content-input')) {
-                    document.getElementById('note-content-input').value = r;
-                    toast('Texto melhorado pela IA','success');
-                }
-                } catch(e) { toast('IA indisponível: '+e.message,'error'); }
             },
             search: H.debounce((v)=>{ STATE.noteSearch=v; renderNotes(); }),
             togglePin: () => { STATE.noteOnlyPinned=!STATE.noteOnlyPinned; renderNotes(); },
@@ -2789,16 +1932,16 @@
                 return;
             }
             grid.innerHTML = notes.map(n=>`
-                <div class="note-card ${n.pinned?'pinned':''}" onclick="K.Notes.edit('${n.id}')">
+                <div class="note-card ${n.pinned?'pinned':''}" onclick="App.Notes.edit('${n.id}')">
                 <div class="note-card-title">${H.esc(n.title)}</div>
                 ${n.content?`<div class="note-card-preview">${H.esc(n.content)}</div>`:''}
                 ${(n.tags||[]).length?`<div class="note-card-tags">${n.tags.map(t=>`<span class="note-tag">${H.esc(t)}</span>`).join('')}</div>`:''}
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div class="note-card-date">${H.fmtDate(n.updatedAt)}</div>
                     <div style="display:flex;gap:4px;" onclick="event.stopPropagation()">
-                    <button class="task-action-btn" onclick="K.Notes.pin('${n.id}')" title="${n.pinned?'Desafixar':'Fixar'}">${n.pinned?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/><line x1="12" y1="14" x2="12" y2="22"/></svg>`:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/></svg>`}</button>
-                    <button class="task-action-btn" onclick="K.Notes.copy('${n.id}')" title="Copiar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-                    <button class="task-action-btn" onclick="K.Notes.del('${n.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    <button class="task-action-btn" onclick="App.Notes.pin('${n.id}')" title="${n.pinned?'Desafixar':'Fixar'}">${n.pinned?`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/><line x1="12" y1="14" x2="12" y2="22"/></svg>`:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/></svg>`}</button>
+                    <button class="task-action-btn" onclick="App.Notes.copy('${n.id}')" title="Copiar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+                    <button class="task-action-btn" onclick="App.Notes.del('${n.id}')" title="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                     </div>
                 </div>
                 </div>
@@ -2809,7 +1952,7 @@
             // 12. CALENDAR SYSTEM
             // ─────────────────────────────────────────────────────────────────────
             const Cal = {
-            load: () => { STATE.events = LS.get('kosa_events', []); },
+            load: () => { STATE.events = LS.get('ko_events', []); },
             save: () => {
                 const title = document.getElementById('event-title-input')?.value.trim();
                 if (!title) { toast('Informe um título','warning'); return; }
@@ -2823,8 +1966,8 @@
                 createdAt: H.now(),
                 };
                 STATE.events.push(event);
-                LS.set('kosa_events', STATE.events);
-                K.closeModal('event-modal');
+                LS.set('ko_events', STATE.events);
+                App.closeModal('event-modal');
                 renderCalendar();
                 updateDashboard();
                 toast('Evento criado','success');
@@ -2838,9 +1981,9 @@
                 }
             },
             del: async (id) => {
-                await K.confirm('Excluir este evento?');
+                await App.confirm('Excluir este evento?');
                 STATE.events = STATE.events.filter(x=>x.id!==id);
-                LS.set('kosa_events', STATE.events);
+                LS.set('ko_events', STATE.events);
                 renderCalendar(); updateDashboard();
                 toast('Evento excluído','info');
             },
@@ -2887,7 +2030,7 @@
                 const dateStr = `${STATE.calYear}-${String(STATE.calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
                 const isToday = d===today.getDate() && STATE.calMonth===today.getMonth() && STATE.calYear===today.getFullYear();
                 const dayEvents = STATE.events.filter(e=>e.start && e.start.startsWith(dateStr));
-                html += `<div class="calendar-day ${isToday?'today':''}" onclick="K.openEventModal('${dateStr}')">
+                html += `<div class="calendar-day ${isToday?'today':''}" onclick="App.openEventModal('${dateStr}')">
                 <div class="calendar-day-num">${d}</div>
                 ${dayEvents.slice(0,2).map(e=>`<div class="cal-event-dot">${H.esc(e.title)}</div>`).join('')}
                 </div>`;
@@ -2902,7 +2045,13 @@
 
             if (eventList) {
                 if (!upcoming.length) {
-                eventList.innerHTML = `<div class="empty-state"><div class="empty-state-icon">icone calendario</div><div class="empty-state-title">Nenhum evento próximo</div></div>`;
+                eventList.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                    </div>
+                    <div class="empty-state-title">Nenhum evento próximo</div>
+                </div>`;
                 } else {
                 eventList.innerHTML = upcoming.map(e=>`
                     <div class="event-item">
@@ -2911,8 +2060,8 @@
                         <div class="event-time">${H.fmtDateTime(e.start)}${e.location?' · '+H.esc(e.location):''}</div>
                     </div>
                     <div style="display:flex;gap:4px;">
-                        <button class="task-action-btn" onclick="K.Cal.exportICS('${e.id}')" title="Exportar .ics">icone arquivo</button>
-                        <button class="task-action-btn" onclick="K.Cal.del('${e.id}')" title="Excluir">icone lixeira</button>
+                        <button class="task-action-btn" onclick="App.Cal.exportICS('${e.id}')" title="Exportar .ics">icone arquivo</button>
+                        <button class="task-action-btn" onclick="App.Cal.del('${e.id}')" title="Excluir">icone lixeira</button>
                     </div>
                     </div>
                 `).join('');
@@ -2928,7 +2077,7 @@
                 STATE.driveEditingId = editId;
                 document.getElementById('drive-text-input').value = content;
                 document.getElementById('drive-text-modal-title').textContent = editId ? 'Editar Texto' : 'Novo Texto';
-                K.openModal('drive-text-modal');
+                App.openModal('drive-text-modal');
             },
             saveText: async () => {
                 const text = document.getElementById('drive-text-input')?.value.trim();
@@ -2936,8 +2085,8 @@
                 try {
                 const nome = text.substring(0,25).trim() || 'Nota';
                 await DB.driveInsertText(text, nome);
-                K.closeModal('drive-text-modal');
-                await K.Drive.refresh();
+                App.closeModal('drive-text-modal');
+                await App.Drive.refresh();
                 toast('Texto salvo','success');
                 } catch(e) { toast('Erro ao salvar: '+e.message,'error'); }
             },
@@ -2948,8 +2097,8 @@
                 const item = STATE.driveItems.find(x=>x.id===STATE.driveEditingId||x.uuid===STATE.driveEditingId);
                 const col = item?.uuid ? 'uuid' : 'id';
                 await DB.driveUpdate(STATE.driveEditingId, col, {content:text, nome:text.substring(0,25)||'Nota', tamanho:text.length});
-                K.closeModal('drive-edit-modal');
-                await K.Drive.refresh();
+                App.closeModal('drive-edit-modal');
+                await App.Drive.refresh();
                 toast('Texto atualizado','success');
                 } catch(e) { toast('Erro: '+e.message,'error'); }
             },
@@ -2957,7 +2106,7 @@
                 const item = STATE.driveItems.find(x=>x.id===id||x.uuid===id); if (!item) return;
                 STATE.driveEditingId = id;
                 document.getElementById('drive-edit-input').value = item.content||'';
-                K.openModal('drive-edit-modal');
+                App.openModal('drive-edit-modal');
             },
             openProps: (id) => {
                 const item = STATE.driveItems.find(x=>x.id===id||x.uuid===id); if (!item) return;
@@ -2967,7 +2116,7 @@
                 document.getElementById('props-size').textContent = H.fmtBytes(item.tamanho);
                 document.getElementById('props-date').textContent = H.fmtDateTime(item.criado_em);
                 document.getElementById('props-type').textContent = item.tipo||'Desconhecido';
-                K.openModal('drive-props-modal');
+                App.openModal('drive-props-modal');
             },
             saveProps: async () => {
                 const name = document.getElementById('drive-props-name')?.value.trim();
@@ -2976,8 +2125,8 @@
                 const item = STATE.driveItems.find(x=>x.id===STATE.drivePropsId||x.uuid===STATE.drivePropsId);
                 const col = item?.uuid ? 'uuid' : 'id';
                 await DB.driveUpdate(STATE.drivePropsId, col, {nome:name});
-                K.closeModal('drive-props-modal');
-                await K.Drive.refresh();
+                App.closeModal('drive-props-modal');
+                await App.Drive.refresh();
                 toast('Nome atualizado','success');
                 } catch(e) { toast('Erro: '+e.message,'error'); }
             },
@@ -2989,12 +2138,12 @@
                 }
             },
             del: async (id, path) => {
-                await K.confirm('Excluir este arquivo?','Esta ação é permanente.');
+                await App.confirm('Excluir este arquivo?','Esta ação é permanente.');
                 try {
                 const item = STATE.driveItems.find(x=>x.id===id||x.uuid===id);
                 const col = item?.uuid ? 'uuid' : 'id';
                 await DB.driveDelete(id, path, col);
-                await K.Drive.refresh();
+                await App.Drive.refresh();
                 toast('Arquivo excluído','info');
                 } catch(e) { toast('Erro ao excluir: '+e.message,'error'); }
             },
@@ -3014,7 +2163,7 @@
             },
             openImage: (url) => {
                 document.getElementById('img-viewer-content').src = url;
-                K.openModal('image-viewer-modal');
+                App.openModal('image-viewer-modal');
             },
             search: H.debounce((v)=>{ STATE.driveSearch=v; renderDrive(); }),
             setFilter: (f, el) => {
@@ -3040,19 +2189,7 @@
                 renderDrive();
                 renderHomeRecentFiles();
             },
-            summarizeText: async (id) => {
-                const item = STATE.driveItems.find(x=>x.id===id||x.uuid===id);
-                if (!item || !item.content) { toast('Sem texto para resumir','warning'); return; }
-                toast('Resumindo com KOSA...','info');
-                try {
-                const r = await GeminiAI.ask(`Resuma este texto: "${item.content}"`, 'Seja conciso e direto.');
-                if (r) {
-                    K.addAssistantMessage(r);
-                    K.nav('kosa', null);
-                    toast('Resumo gerado','success');
-                }
-                } catch(e) { toast('IA indisponível: '+e.message,'error'); }
-            },
+
             };
 
             function renderDrive() {
@@ -3072,17 +2209,16 @@
                 <div class="file-card" style="animation-delay:${i*40}ms">
                 <button class="dots-btn" onclick="toggleCardMenu('${id}')">⋮</button>
                 <div class="card-menu" id="cm-${id}">
-                    ${isText ? `<button class="card-menu-btn" onclick="K.Drive.openEdit('${id}')">Editar</button>
-                                <button class="card-menu-btn" onclick="K.Drive.copyText('${id}')">Copiar</button>
-                                <button class="card-menu-btn" onclick="K.Drive.summarizeText('${id}')">Resumir</button>` : ''}
+                    ${isText ? `<button class="card-menu-btn" onclick="App.Drive.openEdit('${id}')">Editar</button>
+                                <button class="card-menu-btn" onclick="App.Drive.copyText('${id}')">Copiar</button>` : ''}
                     ${!isText ? `<button class="card-menu-btn" onclick="window.open('${H.esc(item.url)}','_blank')">Ver</button>
-                                <button class="card-menu-btn" onclick="K.Drive.download('${H.esc(item.url)}','${H.esc(item.nome)}')">Baixar</button>` : ''}
-                    <button class="card-menu-btn" onclick="K.Drive.openProps('${id}')">Propriedades</button>
-                    <button class="card-menu-btn danger" onclick="K.Drive.del('${id}','${H.esc(item.caminho||'')}')">Excluir</button>
+                                <button class="card-menu-btn" onclick="App.Drive.download('${H.esc(item.url)}','${H.esc(item.nome)}')">Baixar</button>` : ''}
+                    <button class="card-menu-btn" onclick="App.Drive.openProps('${id}')">Propriedades</button>
+                    <button class="card-menu-btn danger" onclick="App.Drive.del('${id}','${H.esc(item.caminho||'')}')">Excluir</button>
                 </div>
 
                 <div class="file-card-preview">
-                    ${isImg ? `<img src="${H.esc(item.url)}" alt="${H.esc(item.nome)}" onclick="K.Drive.openImage('${H.esc(item.url)}')" loading="lazy"/><div class="expand-hint">Expandir</div>` : ''}
+                    ${isImg ? `<img src="${H.esc(item.url)}" alt="${H.esc(item.nome)}" onclick="App.Drive.openImage('${H.esc(item.url)}')" loading="lazy"/><div class="expand-hint">Expandir</div>` : ''}
                     ${isText ? `<div class="file-text-preview">${H.esc((item.content||'').substring(0,150))}</div>` : ''}
                     ${!isImg && !isText ? `<div class="file-icon">${H.fileIcon(item.tipo)}</div>` : ''}
                 </div>
@@ -3127,7 +2263,7 @@
             try {
                 await DB.driveUpload(file, (p) => { if (fill) fill.style.width=p+'%'; });
                 toast(`${file.name} enviado com sucesso`, 'success');
-                await K.Drive.refresh();
+                await App.Drive.refresh();
             } catch(e) { toast('Erro no upload: '+e.message,'error'); }
             finally { if (prog) { setTimeout(()=>{ prog.classList.remove('show'); if(fill) fill.style.width='0'; }, 1200); } }
             }
@@ -3136,75 +2272,6 @@
             for (const file of e.target.files) await uploadFile(file);
             e.target.value='';
             });
-
-            // ─────────────────────────────────────────────────────────────────────
-            // 14. STUDY SYSTEM
-            // ─────────────────────────────────────────────────────────────────────
-            const Study = {
-            run: async (action) => {
-                const input = document.getElementById('study-input')?.value.trim();
-                if (!input) { toast('Insira um texto ou tema','warning'); return; }
-                const result = document.getElementById('study-result');
-                if (result) result.textContent = 'Gerando com IA...';
-
-                const prompts = {
-                resumir: `Faça um resumo claro e organizado do seguinte texto:\n\n${input}`,
-                explicar: `Explique este conteúdo de forma simples, como se fosse para alguém sem conhecimento na área:\n\n${input}`,
-                questoes: `Crie 5 perguntas de múltipla escolha sobre o conteúdo a seguir. Inclua as respostas corretas:\n\n${input}`,
-                flashcards: `Crie 8 flashcards no formato "Frente | Verso" sobre o conteúdo:\n\n${input}`,
-                plano: `Crie um plano de estudo de 7 dias para dominar o seguinte conteúdo, com atividades diárias:\n\n${input}`,
-                mapa: `Crie um mapa mental em formato de texto hierárquico sobre:\n\n${input}`,
-                checklist: `Crie um checklist detalhado de tópicos a estudar sobre:\n\n${input}`,
-                melhorar: `Reescreva e melhore o seguinte texto, tornando-o mais claro e profissional:\n\n${input}`,
-                };
-
-                const sys = 'Você é um assistente educacional especialista. Responda em português do Brasil. Seja didático, organizado e direto.';
-                try {
-                const r = await GeminiAI.ask(prompts[action], sys);
-                STATE.studyLastResult = r || 'Nenhuma resposta recebida.';
-                if (result) result.textContent = STATE.studyLastResult;
-                toast('Análise concluída','success');
-                } catch(e) {
-                if (result) result.textContent = 'IA indisponível. Configure sua chave Gemini nas Configurações.';
-                toast('IA falhou: '+e.message,'error');
-                }
-            },
-            saveAsNote: () => {
-                if (!STATE.studyLastResult) { toast('Nenhum resultado para salvar','warning'); return; }
-                const note = {
-                id: H.uid(),
-                title: 'Estudo — '+new Date().toLocaleDateString('pt-BR'),
-                content: STATE.studyLastResult,
-                tags: ['estudo','ia'],
-                pinned: false,
-                createdAt: H.now(),
-                updatedAt: H.now(),
-                };
-                STATE.notes.unshift(note);
-                LS.set('kosa_notes', STATE.notes);
-                renderNotes();
-                toast('Resultado salvo como nota','success');
-            },
-            saveAsTasks: async () => {
-                if (!STATE.studyLastResult) { toast('Nenhum resultado para converter','warning'); return; }
-                toast('Criando tarefas com IA...','info');
-                try {
-                const r = await GeminiAI.ask(
-                    `Converta este conteúdo em uma lista de tarefas de estudo:\n\n${STATE.studyLastResult}`,
-                    'Retorne apenas uma lista de tarefas, uma por linha, com o prefixo "- ". Sem introdução.'
-                );
-                if (r) {
-                    const lines = r.split('\n').filter(l=>l.trim().startsWith('-')).map(l=>l.replace(/^-\s*/,'').trim()).filter(Boolean);
-                    lines.forEach(title => {
-                    STATE.tasks.unshift({ id:H.uid(), title, priority:'medium', status:'pending', done:false, createdAt:H.now(), updatedAt:H.now() });
-                    });
-                    LS.set('kosa_tasks', STATE.tasks);
-                    renderTasks(); updateDashboard(); updatePomoTaskList();
-                    toast(`${lines.length} tarefas criadas!`,'success');
-                }
-                } catch(e) { toast('IA falhou: '+e.message,'error'); }
-            },
-            };
 
             // ─────────────────────────────────────────────────────────────────────
             // 15. POMODORO SYSTEM
@@ -3279,7 +2346,7 @@
                 const mode = STATE.pomodoro.mode;
                 const msg = mode === 'focus' ? 'Sessão de foco concluída!' : 'Pausa encerrada!';
                 toast(msg, 'success', 5000);
-                H.notify('K.O.S.A Pomodoro', msg);
+                H.notify('Kaleb Organization Pomodoro', msg);
 
                 if (mode === 'focus') {
                 const session = {
@@ -3290,7 +2357,7 @@
                     taskTitle: STATE.pomodoro.taskId ? (STATE.tasks.find(t=>t.id===STATE.pomodoro.taskId)||{}).title : null,
                 };
                 STATE.pomodoro.sessions.unshift(session);
-                LS.set('kosa_pomo', STATE.pomodoro.sessions);
+                LS.set('ko_pomo', STATE.pomodoro.sessions);
                 renderPomoLog();
                 updateDashboard();
                 }
@@ -3312,7 +2379,7 @@
                 prog.style.strokeDashoffset = Pomo.CIRCUMFERENCE * (1-frac);
                 prog.style.strokeDasharray = Pomo.CIRCUMFERENCE;
                 }
-                document.title = STATE.pomodoro.running ? `${m}:${s} — KOSA` : 'K.O.S.A';
+                document.title = STATE.pomodoro.running ? `${m}:${s} — Painel` : 'Kaleb Organization';
             },
             };
 
@@ -3334,192 +2401,6 @@
             sel.innerHTML = `<option value="">— Nenhuma tarefa vinculada —</option>`+
                 pending.map(t=>`<option value="${t.id}">${H.esc(t.title.substring(0,50))}</option>`).join('');
             sel.onchange = ()=>{ STATE.pomodoro.taskId = sel.value || null; };
-            }
-
-            // ─────────────────────────────────────────────────────────────────────
-            // 16. MEMORY SYSTEM
-            // ─────────────────────────────────────────────────────────────────────
-            const Memory = {
-            load: () => { STATE.memories = LS.get('kosa_memories', []); },
-            save: (key, value, category='geral') => {
-                const existing = STATE.memories.findIndex(m=>m.chave===key);
-                const entry = {id:H.uid(), chave:key, valor:value, categoria:category, criado_em:H.now()};
-                if (existing>=0) STATE.memories[existing] = entry;
-                else STATE.memories.unshift(entry);
-                LS.set('kosa_memories', STATE.memories);
-            },
-            find: (query) => {
-                const q=query.toLowerCase();
-                return STATE.memories.filter(m=>m.chave.toLowerCase().includes(q)||m.valor.toLowerCase().includes(q));
-            },
-            all: () => STATE.memories,
-            del: (id) => {
-                STATE.memories = STATE.memories.filter(m=>m.id!==id);
-                LS.set('kosa_memories', STATE.memories);
-            },
-            };
-
-            // ─────────────────────────────────────────────────────────────────────
-            // 17. COMMAND ENGINE — KOSA Action Executor
-            // ─────────────────────────────────────────────────────────────────────
-            const CommandEngine = {
-            execute: async (jsonAction) => {
-                const {acao, dados} = jsonAction;
-                switch(acao) {
-                case 'criar_tarefa': {
-                    const task = { id:H.uid(), title:dados.titulo||'Nova Tarefa', desc:dados.descricao||'', priority:dados.prioridade||'medium', dueDate:dados.data||'', status:'pending', done:false, createdAt:H.now(), updatedAt:H.now() };
-                    STATE.tasks.unshift(task);
-                    LS.set('kosa_tasks', STATE.tasks);
-                    renderTasks(); updateDashboard(); updatePomoTaskList();
-                    break;
-                }
-                case 'listar_tarefas': {
-                    const pending = STATE.tasks.filter(t=>!t.done).slice(0,5);
-                    return pending.length ? pending.map(t=>`• ${t.title}`).join('\n') : 'Nenhuma tarefa pendente.';
-                }
-                case 'concluir_tarefa': {
-                    const t = STATE.tasks.find(x=>x.title.toLowerCase().includes((dados.titulo||'').toLowerCase()));
-                    if (t) { t.done=true; t.status='done'; LS.set('kosa_tasks', STATE.tasks); renderTasks(); updateDashboard(); }
-                    break;
-                }
-                case 'criar_nota': {
-                    const note = { id:H.uid(), title:dados.titulo||'Nova Nota', content:dados.conteudo||dados.texto||'', tags:dados.tags||[], pinned:false, createdAt:H.now(), updatedAt:H.now() };
-                    STATE.notes.unshift(note);
-                    LS.set('kosa_notes', STATE.notes);
-                    renderNotes();
-                    break;
-                }
-                case 'listar_notas': {
-                    return STATE.notes.slice(0,5).map(n=>`• ${n.title}`).join('\n') || 'Nenhuma nota encontrada.';
-                }
-                case 'criar_evento': {
-                    const ev = { id:H.uid(), title:dados.titulo||'Novo Evento', desc:dados.descricao||'', start:dados.data||'', end:'', location:dados.local||'', createdAt:H.now() };
-                    STATE.events.push(ev);
-                    LS.set('kosa_events', STATE.events);
-                    renderCalendar(); updateDashboard();
-                    break;
-                }
-                case 'iniciar_pomodoro': {
-                    Pomo.reset(); Pomo.toggle();
-                    K.nav('pomodoro', null);
-                    break;
-                }
-                case 'parar_pomodoro': { Pomo.reset(); break; }
-                case 'abrir_pagina': {
-                    const pageMap = { tarefas:'tasks', notas:'notes', agenda:'agenda', drive:'drive', estudos:'studies', pomodoro:'pomodoro', kosa:'kosa', inicio:'home', configuracoes:'settings', comandos:'commands' };
-                    const page = pageMap[dados.pagina?.toLowerCase()] || dados.pagina;
-                    if (page) K.nav(page, null);
-                    break;
-                }
-                case 'buscar_arquivo': {
-                    STATE.driveSearch = dados.query || '';
-                    const inp = document.getElementById('drive-search');
-                    if (inp) inp.value = STATE.driveSearch;
-                    renderDrive();
-                    K.nav('drive', null);
-                    break;
-                }
-                case 'salvar_memoria': {
-                    Memory.save(dados.chave||'memória', dados.valor||dados.texto||'');
-                    break;
-                }
-                case 'consultar_memoria': {
-                    const found = Memory.find(dados.query||'');
-                    return found.length ? found.map(m=>`${m.chave}: ${m.valor}`).join('\n') : 'Nenhuma memória encontrada.';
-                }
-                case 'organizar_dia':
-                case 'planejar_amanha': {
-                    K.planDay();
-                    return null; // Response handled by planDay
-                }
-                }
-                return null;
-            },
-            };
-
-            // ─────────────────────────────────────────────────────────────────────
-            // 18. KOSA CONVERSATION
-            // ─────────────────────────────────────────────────────────────────────
-            function loadConversation() {
-            STATE.conversation = LS.get('kosa_conversation', []);
-            renderConversation();
-            }
-
-            function renderConversation() {
-            const container = document.getElementById('kosa-conversation'); if (!container) return;
-            if (!STATE.conversation.length) {
-                const asst = STATE.settings.assistantName || 'KOSA';
-                const name = STATE.settings.username || '';
-                container.innerHTML = `<div class="kosa-msg assistant"><div class="kosa-msg-avatar">K</div><div><div class="kosa-msg-bubble">Olá${name?' '+name:''}! Sou o ${asst}, seu assistente pessoal. Como posso ajudar hoje?</div><div class="kosa-msg-time">agora</div></div></div>`;
-                return;
-            }
-            container.innerHTML = STATE.conversation.slice(-30).map(m=>`
-                <div class="kosa-msg ${m.role}">
-                <div class="kosa-msg-avatar">${m.role==='user'?'U':'K'}</div>
-                <div>
-                    <div class="kosa-msg-bubble">${H.esc(m.content).replace(/\n/g,'<br>')}</div>
-                    <div class="kosa-msg-time">${m.time||''}</div>
-                </div>
-                </div>
-            `).join('');
-            container.scrollTop = container.scrollHeight;
-            }
-
-            function addUserMessage(text) {
-            const msg = {role:'user', content:text, time: new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})};
-            STATE.conversation.push(msg);
-            LS.set('kosa_conversation', STATE.conversation);
-            renderConversation();
-            }
-
-            function K_addAssistantMessage(text) {
-            const msg = {role:'assistant', content:text, time: new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})};
-            STATE.conversation.push(msg);
-            LS.set('kosa_conversation', STATE.conversation);
-            renderConversation();
-            if (STATE.voice.enabled && !STATE.voice.paused) Voice.speak(text.substring(0,400));
-            }
-
-            async function processCommand(text) {
-            if (!text.trim()) return;
-            addUserMessage(text);
-            Voice.setHudState('thinking');
-
-            const transcript = document.getElementById('kosa-transcript');
-            if (transcript) transcript.textContent = '';
-
-            try {
-                const response = await GeminiAI.ask(text, GeminiAI.systemPrompt());
-                if (!response) {
-                K_addAssistantMessage('Não consegui obter uma resposta. Verifique sua conexão e chave Gemini.');
-                Voice.setHudState('idle');
-                return;
-                }
-
-                // Try to parse as action JSON
-                let parsed = null;
-                const jsonMatch = response.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                try {
-                    parsed = JSON.parse(jsonMatch[0]);
-                } catch {}
-                }
-
-                if (parsed && parsed.tipo === 'acao') {
-                const extra = await CommandEngine.execute(parsed);
-                const reply = extra || parsed.resposta || 'Ação executada.';
-                K_addAssistantMessage(reply);
-                } else {
-                K_addAssistantMessage(response);
-                }
-            } catch(e) {
-                Voice.setHudState('error');
-                K_addAssistantMessage(`Sistema offline. ${e.message || 'Verifique sua conexão e chave Gemini nas Configurações.'}`);
-                setTimeout(()=>Voice.setHudState('idle'), 2000);
-                return;
-            }
-
-            Voice.setHudState('idle');
             }
 
             // ─────────────────────────────────────────────────────────────────────
@@ -3555,7 +2436,7 @@
             const items = STATE.driveItems.slice(0,5);
             if (!items.length) { container.innerHTML=`<div style="color:var(--muted);font-size:13px;">Nenhum arquivo</div>`; return; }
             container.innerHTML = items.map(item=>`
-                <div class="rf-item" onclick="K.nav('drive',null)">
+                <div class="rf-item" onclick="App.nav('drive',null)">
                 <span class="rf-icon">${item.tipo_item==='text'?`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`:H.fileIcon(item.tipo)}</span>
                 <span class="rf-name">${H.esc(item.nome)}</span>
                 <span class="rf-date">${H.fmtDate(item.criado_em)}</span>
@@ -3589,42 +2470,6 @@
             }
 
             // ─────────────────────────────────────────────────────────────────────
-            // 21. COMMANDS PAGE
-            // ─────────────────────────────────────────────────────────────────────
-            const COMMAND_LIST = [
-            {text:'crie uma tarefa para estudar amanhã', cat:'Tarefas'},
-            {text:'liste minhas tarefas pendentes', cat:'Tarefas'},
-            {text:'conclua a tarefa de estudar', cat:'Tarefas'},
-            {text:'crie uma nota com minhas ideias', cat:'Notas'},
-            {text:'liste minhas notas', cat:'Notas'},
-            {text:'adicione um lembrete para sexta-feira', cat:'Agenda'},
-            {text:'liste meus próximos eventos', cat:'Agenda'},
-            {text:'inicie um pomodoro de 25 minutos', cat:'Pomodoro'},
-            {text:'pare o pomodoro', cat:'Pomodoro'},
-            {text:'abra o mini drive', cat:'Navegação'},
-            {text:'abra a agenda', cat:'Navegação'},
-            {text:'abra as configurações', cat:'Navegação'},
-            {text:'procure nos arquivos por banner', cat:'Drive'},
-            {text:'resuma minhas tarefas do dia', cat:'IA'},
-            {text:'crie um plano de estudo de 7 dias', cat:'Estudos'},
-            {text:'gere ideias para meu projeto', cat:'Criatividade'},
-            {text:'organize meu dia de hoje', cat:'Planejamento'},
-            {text:'planeje meu amanhã', cat:'Planejamento'},
-            {text:'lembre que meu projeto principal é X', cat:'Memória'},
-            {text:'o que você lembra sobre mim?', cat:'Memória'},
-            ];
-
-            function renderCommands() {
-            const grid = document.getElementById('commands-grid'); if (!grid) return;
-            grid.innerHTML = COMMAND_LIST.map(c=>`
-                <div class="command-card" onclick="K.testCommandText('${H.esc(c.text)}')">
-                <div class="command-text">"${H.esc(c.text)}"</div>
-                <div class="command-cat">${H.esc(c.cat)}</div>
-                </div>
-            `).join('');
-            }
-
-            // ─────────────────────────────────────────────────────────────────────
             // 22. GLOBAL SEARCH
             // ─────────────────────────────────────────────────────────────────────
             const globalSearch = H.debounce((query) => {
@@ -3634,15 +2479,13 @@
             const results = [];
 
             STATE.tasks.filter(t=>(t.title||'').toLowerCase().includes(q)).slice(0,3).forEach(t=>
-                results.push({type:'Tarefa',title:t.title,preview:t.desc||'',action:()=>K.nav('tasks',null)}));
+                results.push({type:'Tarefa',title:t.title,preview:t.desc||'',action:()=>App.nav('tasks',null)}));
             STATE.notes.filter(n=>(n.title||'').toLowerCase().includes(q)||(n.content||'').toLowerCase().includes(q)).slice(0,3).forEach(n=>
-                results.push({type:'Nota',title:n.title,preview:(n.content||'').substring(0,80),action:()=>{K.closeModal('global-search-modal');K.Notes.edit(n.id);}}));
+                results.push({type:'Nota',title:n.title,preview:(n.content||'').substring(0,80),action:()=>{App.closeModal('global-search-modal');App.Notes.edit(n.id);}}));
             STATE.driveItems.filter(f=>(f.nome||'').toLowerCase().includes(q)).slice(0,3).forEach(f=>
-                results.push({type:'Arquivo',title:f.nome,preview:H.fmtBytes(f.tamanho),action:()=>{K.closeModal('global-search-modal');K.nav('drive',null);}}));
+                results.push({type:'Arquivo',title:f.nome,preview:H.fmtBytes(f.tamanho),action:()=>{App.closeModal('global-search-modal');App.nav('drive',null);}}));
             STATE.events.filter(e=>(e.title||'').toLowerCase().includes(q)).slice(0,2).forEach(e=>
-                results.push({type:'Evento',title:e.title,preview:H.fmtDateTime(e.start),action:()=>K.nav('agenda',null)}));
-            STATE.memories.filter(m=>(m.chave||'').toLowerCase().includes(q)||(m.valor||'').toLowerCase().includes(q)).slice(0,2).forEach(m=>
-                results.push({type:'Memória',title:m.chave,preview:m.valor.substring(0,80),action:()=>{}}));
+                results.push({type:'Evento',title:e.title,preview:H.fmtDateTime(e.start),action:()=>App.nav('agenda',null)}));
 
             if (!results.length) {
                 container.innerHTML = `<div class="empty-state" style="padding:20px;"><div>Nenhum resultado para "${H.esc(query)}"</div></div>`;
@@ -3688,37 +2531,29 @@
                 const isInput = active && (active.tagName==='INPUT'||active.tagName==='TEXTAREA');
 
                 if (e.key==='Escape') {
-                document.querySelectorAll('.modal-overlay').forEach(m=>{ if(m.classList.contains('show')) K.closeModal(m.id); });
+                document.querySelectorAll('.modal-overlay').forEach(m=>{ if(m.classList.contains('show')) App.closeModal(m.id); });
                 return;
                 }
 
                 if (ctrl && !isInput) {
-                if (e.key==='k') { e.preventDefault(); K.openGlobalSearch(); }
-                else if (e.key==='n') { e.preventDefault(); K.openNoteModal(); }
-                else if (e.key==='t') { e.preventDefault(); K.openTaskModal(); }
-                else if (e.key==='d') { e.preventDefault(); K.nav('drive',null); }
-                else if (e.key==='p') { e.preventDefault(); K.startPomodoro(); }
-                else if (e.shiftKey && e.key==='K') { e.preventDefault(); K.nav('kosa',null); }
+                if (e.key==='n') { e.preventDefault(); App.openNoteModal(); }
+                else if (e.key==='t') { e.preventDefault(); App.openTaskModal(); }
+                else if (e.key==='d') { e.preventDefault(); App.nav('drive',null); }
+                else if (e.key==='p') { e.preventDefault(); App.startPomodoro(); }
                 }
 
                 // Enter to send in quick command
-                if (e.key==='Enter' && active?.id==='home-command-input') K.homeCommand();
-                if (e.key==='Enter' && active?.id==='kosa-text-input') K.sendTextCommand();
-                if (e.key==='Enter' && active?.id==='cmd-test-input') K.testCommand();
             });
             }
 
             // ─────────────────────────────────────────────────────────────────────
-            // 25. MAIN K OBJECT (Public API)
+            // 25. MAIN APP OBJECT (Public API)
             // ─────────────────────────────────────────────────────────────────────
-            const K = {
-            // Systems
-            Tasks, Notes, Cal, Drive, Pomo, Study, Voice, Memory,
-            Settings: K_Settings,
+            const App = {
+            Tasks, Notes, Cal, Drive, Pomo,
+            Settings: App_Settings,
 
-            // Navigation
             nav: (page, btnEl) => {
-                // Close mobile menu
                 document.querySelector('.sidebar')?.classList.remove('open');
                 document.getElementById('sidebar-overlay')?.classList.remove('show');
 
@@ -3729,36 +2564,24 @@
                 document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
                 if (btnEl) btnEl.classList.add('active');
                 else {
-                // Find by data or text
                 document.querySelectorAll('.nav-item').forEach(b=>{
                     if (b.getAttribute('onclick')?.includes(`'${page}'`)) b.classList.add('active');
                 });
                 }
 
                 STATE.currentPage = page;
-
-                // Page-specific actions
-                if (page==='kosa' && !STATE.voice.paused) {
-                clearTimeout(STATE.voice.restartTimeout);
-                STATE.voice.restartTimeout = setTimeout(Voice.startListening, 800);
-                } else if (page!=='kosa') {
-                Voice.stopListening();
-                }
-                if (page==='drive') K.Drive.refresh().then(renderDrive);
+                if (page==='drive') App.Drive.refresh().then(renderDrive);
                 if (page==='agenda') renderCalendar();
-                if (page==='tasks') { renderTasks(); }
-                if (page==='notes') { renderNotes(); }
+                if (page==='tasks') renderTasks();
+                if (page==='notes') renderNotes();
                 if (page==='pomodoro') { renderPomoLog(); updatePomoTaskList(); }
-                if (page==='commands') renderCommands();
                 if (page==='home') updateDashboard();
             },
 
-            // Modals
             openModal: (id) => {
                 const m = document.getElementById(id); if (!m) return;
                 m.style.display='flex';
                 requestAnimationFrame(()=>requestAnimationFrame(()=>m.classList.add('show')));
-                // Focus first input
                 setTimeout(()=>{ const inp=m.querySelector('input,textarea'); if(inp) inp.focus(); }, 200);
             },
             closeModal: (id) => {
@@ -3774,7 +2597,7 @@
                 document.getElementById('task-priority-input').value='medium';
                 document.getElementById('task-date-input').value='';
                 document.getElementById('task-modal-title').textContent='Nova Tarefa';
-                K.openModal('task-modal');
+                App.openModal('task-modal');
             },
             openNoteModal: () => {
                 STATE.noteEditingId = null;
@@ -3782,7 +2605,7 @@
                 document.getElementById('note-content-input').value='';
                 document.getElementById('note-tags-input').value='';
                 document.getElementById('note-modal-title').textContent='Nova Nota';
-                K.openModal('note-modal');
+                App.openModal('note-modal');
             },
             openEventModal: (date='') => {
                 document.getElementById('event-title-input').value='';
@@ -3790,26 +2613,36 @@
                 document.getElementById('event-start-input').value = date ? `${date}T09:00` : '';
                 document.getElementById('event-end-input').value = date ? `${date}T10:00` : '';
                 document.getElementById('event-location-input').value='';
-                K.openModal('event-modal');
+                App.openModal('event-modal');
             },
             openGlobalSearch: () => {
-                K.openModal('global-search-modal');
+                App.openModal('global-search-modal');
                 setTimeout(()=>document.getElementById('global-search-input')?.focus(), 100);
             },
 
-            // Confirmation dialog
             _confirmResolve: null, _confirmReject: null,
+            cancelConfirm: () => {
+                App.closeModal('confirm-modal');
+                if (App._confirmReject) App._confirmReject();
+                App._confirmResolve = null;
+                App._confirmReject = null;
+            },
+            resolveConfirm: () => {
+                App.closeModal('confirm-modal');
+                if (App._confirmResolve) App._confirmResolve();
+                App._confirmResolve = null;
+                App._confirmReject = null;
+            },
             confirm: (question, sub='') => {
                 return new Promise((res, rej) => {
-                K._confirmResolve = res;
-                K._confirmReject = rej;
+                App._confirmResolve = res;
+                App._confirmReject = rej;
                 document.getElementById('confirm-question').textContent = question;
                 document.getElementById('confirm-sub').textContent = sub;
-                K.openModal('confirm-modal');
+                App.openModal('confirm-modal');
                 });
             },
 
-            // Mobile menu
             toggleMobileMenu: () => {
                 const sb = document.querySelector('.sidebar');
                 const ov = document.getElementById('sidebar-overlay');
@@ -3817,76 +2650,11 @@
                 ov?.classList.toggle('show');
             },
 
-            // Voice
-            processVoiceCommand: (text) => processCommand(text),
-
-            // Text input
-            sendTextCommand: () => {
-                const inp = document.getElementById('kosa-text-input');
-                const text = inp?.value.trim();
-                if (!text) return;
-                inp.value='';
-                processCommand(text);
-            },
-
-            // Home quick command
-            homeCommand: () => {
-                const inp = document.getElementById('home-command-input');
-                const text = inp?.value.trim();
-                if (!text) return;
-                inp.value='';
-                K.nav('kosa', null);
-                setTimeout(()=>processCommand(text), 300);
-            },
-
-            // Command page test
-            testCommand: () => {
-                const inp = document.getElementById('cmd-test-input');
-                const text = inp?.value.trim();
-                if (!text) return;
-                inp.value='';
-                K.nav('kosa', null);
-                setTimeout(()=>processCommand(text), 300);
-            },
-            testCommandText: (text) => {
-                K.nav('kosa', null);
-                setTimeout(()=>processCommand(text), 300);
-            },
-
-            // Clear conversation
-            clearConversation: () => {
-                STATE.conversation = [];
-                LS.del('kosa_conversation');
-                renderConversation();
-                toast('Conversa limpa','info');
-            },
-
-            // Add assistant message (for internal use)
-            addAssistantMessage: K_addAssistantMessage,
-
-            // Plan day
-            planDay: async () => {
-                toast('KOSA planejando seu dia...','info');
-                const tasks = STATE.tasks.filter(t=>!t.done).slice(0,8).map(t=>`- ${t.title} (${t.priority})`).join('\n');
-                const events = STATE.events.filter(e=>e.start&&e.start.startsWith(H.today())).map(e=>`- ${e.title} às ${e.start.split('T')[1]?.substring(0,5)}`).join('\n');
-                const prompt = `Hoje é ${new Date().toLocaleDateString('pt-BR',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}.
-
-            Tarefas pendentes:\n${tasks||'Nenhuma tarefa'}\n\nEventos de hoje:\n${events||'Nenhum evento'}
-
-            Crie um plano de dia otimizado, sugira prioridades e dê dicas de produtividade. Seja direto e prático.`;
-                try {
-                K.nav('kosa', null);
-                await processCommand(prompt);
-                } catch(e) { toast('IA indisponível','error'); }
-            },
-
-            // Start pomodoro shortcut
             startPomodoro: () => {
-                K.nav('pomodoro', null);
+                App.nav('pomodoro', null);
                 setTimeout(()=>{ if(!STATE.pomodoro.running) Pomo.toggle(); }, 300);
             },
 
-            // Global search (exposed for debounce)
             globalSearch,
             };
 
@@ -3894,63 +2662,29 @@
             // 26. INIT
             // ─────────────────────────────────────────────────────────────────────
             async function init() {
-            // Load settings first (may override CFG keys)
             loadSettings();
 
-            // Load local data
             Tasks.load();
             Notes.load();
             Cal.load();
-            Memory.load();
-            STATE.pomodoro.sessions = LS.get('kosa_pomo', []);
+            STATE.pomodoro.sessions = LS.get('ko_pomo', []);
 
-            // Start clock
             startClock();
-
-            // Init network
             initNetwork();
-
-            // Init keyboard
             initKeyboard();
-
-            // Init drive drop zone
             initDriveDropZone();
 
-            // Initial renders
             updateDashboard();
             renderTasks();
             renderNotes();
             renderCalendar();
             renderPomoLog();
-            renderCommands();
             updatePomoTaskList();
             Pomo.updateDisplay();
 
-            // Load voices for speech synthesis
-            if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
+            initSupabase().then(()=>App.Drive.refresh().then(()=>updateDashboard()));
 
-            // Check mic
-            Voice.micCheck();
-
-            // Init Supabase (async, non-blocking)
-            initSupabase().then(()=>K.Drive.refresh().then(()=>updateDashboard()));
-
-            // Test Gemini (silent, just check status)
-            GeminiAI.getModel()
-                .then(()=>{ updateSysStatus('gemini','ok'); updateStatusBadge('sb-gemini','ok','Online'); })
-                .catch(()=>{ updateSysStatus('gemini','err'); updateStatusBadge('sb-gemini','err','Offline'); });
-
-            // Load KOSA conversation
-            loadConversation();
-
-            // KOSA welcome
-            const asst = STATE.settings.assistantName || 'KOSA';
-            const name = STATE.settings.username || '';
-            Voice.setHudState('idle');
-            setTimeout(()=>toast(`${asst} inicializado — ${name||'bem-vindo!'}`, 'system', 3000), 1000);
-
-            // Auto-listen if on KOSA page
-            updateStatusBadge('rc-kosa', 'ok', '');
+            setTimeout(()=>toast('Painel inicializado', 'system', 2500), 700);
             }
 
             // Close card menus on outside click
@@ -3959,9 +2693,6 @@
                 document.querySelectorAll('.card-menu').forEach(m=>m.classList.remove('open'));
             }
             });
-
-            // Voices may load late
-            if ('speechSynthesis' in window) window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
 
             // Safe PWA registration
             if ('serviceWorker' in navigator) {
@@ -3973,5 +2704,5 @@
             // Launch
             window.addEventListener('DOMContentLoaded', init);
         </script>
-    </body>
+</body>
 </html>
